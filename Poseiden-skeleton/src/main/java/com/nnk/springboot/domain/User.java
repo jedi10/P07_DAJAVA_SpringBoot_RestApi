@@ -18,23 +18,30 @@ public class User {
     private Integer id;
 
     @NotBlank(message = "Username is mandatory")
+    @Column(nullable = false, length = 35)
     @Getter
     @Setter
     private String username;
 
     @NotBlank(message = "Password is mandatory")
+    @Column(nullable = false)
     @Getter
     @Setter
     private String password;
 
     @NotBlank(message = "FullName is mandatory")
+    @Column(nullable = false, length = 35)
     @Getter
     @Setter
     private String fullname;
 
     @NotBlank(message = "Role is mandatory")
+    @Column(nullable = false, length = 35)
     @Getter
     @Setter
     private String role;
 
 }
+
+
+//https://www.baeldung.com/hibernate-notnull-vs-nullable
