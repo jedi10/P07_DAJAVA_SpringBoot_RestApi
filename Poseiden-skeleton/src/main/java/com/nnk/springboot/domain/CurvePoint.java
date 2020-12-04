@@ -28,7 +28,7 @@ public class CurvePoint {
     @Setter
     private Integer curveId;
 
-    @Column(name = "as_of_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "as_of_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime asOfDate;
@@ -41,10 +41,14 @@ public class CurvePoint {
     @Setter
     private Double value;
 
-    @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime creationDate;
 
+
+    //https://www.baeldung.com/jpa-default-column-values
+    //Hibernate annotation for timestamp https://thorben-janssen.com/persist-creation-update-timestamps-hibernate/
+    //https://stackoverflow.com/questions/811845/setting-a-jpa-timestamp-column-to-be-generated-by-the-database
 
 }

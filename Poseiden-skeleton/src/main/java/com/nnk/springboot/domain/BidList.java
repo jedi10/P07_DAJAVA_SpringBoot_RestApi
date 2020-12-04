@@ -53,7 +53,7 @@ public class BidList {
     @Setter
     private String benchmark;
 
-    @Column(name = "bid_list_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "bid_list_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime bidListDate;
@@ -83,7 +83,7 @@ public class BidList {
     @Setter
     private String creationName;
 
-    @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime creationDate;
@@ -93,7 +93,7 @@ public class BidList {
     @Setter
     private String revisionName;
 
-    @Column(name = "revision_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "revision_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime revisionDate;

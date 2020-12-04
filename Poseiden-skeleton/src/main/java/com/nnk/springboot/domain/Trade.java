@@ -53,7 +53,7 @@ public class Trade {
     @Setter
     private String benchmark;
 
-    @Column(name = "trade_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "trade_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime tradeDate;
@@ -79,7 +79,7 @@ public class Trade {
     @Setter
     private String creationName;
 
-    @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime creationDate;
@@ -89,7 +89,7 @@ public class Trade {
     @Setter
     private String revisionName;
 
-    @Column(name = "revision_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "revision_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Getter
     @Setter
     private LocalDateTime revisionDate;
