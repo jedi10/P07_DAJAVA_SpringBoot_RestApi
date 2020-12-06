@@ -117,4 +117,15 @@ public class BidList {
     @Setter
     private String side;
 
+    /**
+     * <b>Constructor BidList</b>
+     * @param account bid account name
+     * @param type bid type
+     * @param bidQuantity bid quantity
+     */
+    public BidList(String account, String type, Double bidQuantity) {
+        this.account = account;
+        this.type = type;
+        this.bidQuantity = bidQuantity;
+    }
 }
