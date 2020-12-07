@@ -46,6 +46,11 @@ public class CurvePoint {
     @Setter
     private LocalDateTime creationDate;
 
+    public CurvePoint(Integer curveId, Double term, Double value) {
+        this.curveId = curveId;
+        this.term = term;
+        this.value = value;
+    }
 
     //https://www.baeldung.com/jpa-default-column-values
     //Hibernate annotation for timestamp https://thorben-janssen.com/persist-creation-update-timestamps-hibernate/

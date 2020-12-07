@@ -50,7 +50,14 @@ public class User {
     @Setter
     private String role;
 
+    public User(String username, String password, String fullname, String role) {
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+        this.role = role;
+    }
 }
 
 //https://www.baeldung.com/java-bean-validation-not-null-empty-blank
 //https://www.baeldung.com/hibernate-notnull-vs-nullable
+//https://nullbeans.com/how-to-use-java-bean-validation-in-spring-boot/

@@ -112,4 +112,9 @@ public class Trade {
     @Getter
     @Setter
     private String side;
+
+    public Trade(String account, String type) {
+        this.account = account;
+        this.type = type;
+    }
 }
