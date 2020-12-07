@@ -60,3 +60,4 @@ public class User {
 
 //https://www.baeldung.com/java-bean-validation-not-null-empty-blank
 //https://www.baeldung.com/hibernate-notnull-vs-nullable
+//https://nullbeans.com/how-to-use-java-bean-validation-in-spring-boot/
