@@ -40,6 +40,13 @@ public class Rating {
     @Setter
     private Integer orderNumber;
 
+    /**
+     * <b>Constructor Rating</b>
+     * @param moodysRating moodys Rating
+     * @param sandPRating sand P Rating
+     * @param fitchRating fitch Rating
+     * @param orderNumber order Number
+     */
     public Rating(String moodysRating, String sandPRating,
                   String fitchRating, Integer orderNumber) {
         this.moodysRating = moodysRating;

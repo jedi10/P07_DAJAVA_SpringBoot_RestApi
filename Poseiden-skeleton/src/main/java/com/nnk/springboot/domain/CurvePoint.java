@@ -46,6 +46,12 @@ public class CurvePoint {
     @Setter
     private LocalDateTime creationDate;
 
+    /**
+     * <b>Constructor CurvePoint</b>
+     * @param curveId curveID
+     * @param term term
+     * @param value value
+     */
     public CurvePoint(Integer curveId, Double term, Double value) {
         this.curveId = curveId;
         this.term = term;

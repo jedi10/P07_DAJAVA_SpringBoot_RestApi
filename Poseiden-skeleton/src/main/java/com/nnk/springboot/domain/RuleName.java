@@ -48,6 +48,15 @@ public class RuleName {
     @Setter
     private String sqlPart;
 
+    /**
+     * <b>Constructor RuleName</b>
+     * @param name name
+     * @param description description
+     * @param json json
+     * @param template template
+     * @param sqlStr sql Str
+     * @param sqlPart sql Part
+     */
     public RuleName(String name, String description, String json,
                     String template, String sqlStr, String sqlPart) {
         this.name = name;

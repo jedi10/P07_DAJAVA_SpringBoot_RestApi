@@ -113,6 +113,11 @@ public class Trade {
     @Setter
     private String side;
 
+    /**
+     * <b>Constructor Trade</b>
+     * @param account account
+     * @param type type
+     */
     public Trade(String account, String type) {
         this.account = account;
         this.type = type;

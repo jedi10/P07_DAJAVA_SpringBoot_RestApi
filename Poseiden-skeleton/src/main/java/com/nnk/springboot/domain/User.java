@@ -50,6 +50,13 @@ public class User {
     @Setter
     private String role;
 
+    /**
+     * <b>Constructor User</b>
+     * @param username username
+     * @param password password
+     * @param fullname fullName
+     * @param role role
+     */
     public User(String username, String password, String fullname, String role) {
         this.username = username;
         this.password = password;
