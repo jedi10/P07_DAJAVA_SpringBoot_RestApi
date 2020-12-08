@@ -7,10 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * Created by Khang Nguyen.
- * Email: khang.nguyen@banvien.com
- * Date: 09/03/2019
- * Time: 11:26 AM
+ * @author Created by Khang Nguyen (Email: khang.nguyen@banvien.com), Upgraded by Jedi 
+ * @version Alpha1.1.0
+ * @since Alpha 1.0.0 09/03/2019 11:26 AM
  */
 @SpringBootTest
 public class PasswordEncodeTest {
@@ -28,4 +27,5 @@ public class PasswordEncodeTest {
     }
 }
 
+//https://www.vojtechruzicka.com/stop-using-javadoc-author-tag/
 //https://www.yawintutor.com/encode-decode-using-bcryptpasswordencoder-in-spring-boot-security/
