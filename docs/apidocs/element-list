@@ -1,0 +1,4 @@
+com.nnk.springboot
+com.nnk.springboot.controllers
+com.nnk.springboot.domain
+com.nnk.springboot.repositories
