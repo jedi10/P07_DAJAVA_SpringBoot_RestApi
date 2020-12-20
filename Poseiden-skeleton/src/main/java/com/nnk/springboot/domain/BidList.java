@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Required;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "bidlist")
@@ -23,6 +25,7 @@ public class BidList {
     @Setter
     private Integer id;
 
+    @NotBlank(message = "Account is mandatory")
     @Getter
     @Setter
     private String account;
@@ -127,5 +130,29 @@ public class BidList {
         this.account = account;
         this.type = type;
         this.bidQuantity = bidQuantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BidList)) return false;
+        BidList bidList = (BidList) o;
+        return Objects.equals(account, bidList.account) &&
+                Objects.equals(type, bidList.type) &&
+                Objects.equals(bidQuantity, bidList.bidQuantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(account, type, bidQuantity);
+    }
+
+    @Override
+    public String toString() {
+        return "BidList{" +
+                "account='" + account + '\'' +
+                ", type='" + type + '\'' +
+                ", bidQuantity=" + bidQuantity +
+                '}';
     }
 }
