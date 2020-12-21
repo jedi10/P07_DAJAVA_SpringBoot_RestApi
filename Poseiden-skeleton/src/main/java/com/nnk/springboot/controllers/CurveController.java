@@ -1,54 +1,83 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.repositories.CurvePointRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
+@RequestMapping("/curvePoint/")
 public class CurveController {
-    // TODO: Inject Curve Point service
 
-    @RequestMapping("/curvePoint/list")
+    private CurvePointRepository curvePointRepository;
+
+    public CurveController(CurvePointRepository curvePointRepository) {
+        this.curvePointRepository = curvePointRepository;
+    }
+
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model)
     {
-        // TODO: find all Curve Point, add to model
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
         return "curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/add")
-    public String addBidForm(CurvePoint bid) {
+    @GetMapping(value = "add")
+    public String addCurveForm(CurvePoint curve) {
+
         return "curvePoint/add";
     }
 
-    @PostMapping("/curvePoint/validate")
-    public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Curve list
-        return "curvePoint/add";
+    @PostMapping(value = "validate")
+    public String validate(@RequestBody @Valid CurvePoint curvePoint,
+                           BindingResult result,
+                           Model model) {
+        if (result.hasErrors()){
+            return "curvePoint/add";
+        }
+        curvePointRepository.save(curvePoint);
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
+        return "curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get CurvePoint by Id and to model then show to the form
+    @GetMapping(value = "update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id,
+                                 Model model) {
+        String errorMessage = "Invalid curve Id: there is no curve with Id: ";
+        CurvePoint curvePoint = curvePointRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException(errorMessage + id));
+        model.addAttribute("curvePoint", curvePoint);
         return "curvePoint/update";
     }
 
-    @PostMapping("/curvePoint/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Curve and return Curve list
-        return "redirect:/curvePoint/list";
+    @PutMapping(value = "update/{id}")
+    public String updateCurve(@PathVariable("id") Integer id,
+                            @RequestBody @Valid CurvePoint curvePoint,
+                            BindingResult result, Model model) {
+        if(result.hasErrors()){
+            return "curvePoint/update";
+        }
+        curvePoint.setId(id);
+        curvePointRepository.save(curvePoint);
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
+        return "curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Curve by Id and delete the Curve, return to Curve list
-        return "redirect:/curvePoint/list";
+    @RolesAllowed("ADMIN")
+    @DeleteMapping(value = "delete/{id}")
+    public String deleteCurve(@PathVariable("id") Integer id,
+                            Model model) {
+        Optional<CurvePoint> curvePoint = curvePointRepository.findById(id);
+        if(curvePoint.isPresent()){
+            curvePointRepository.deleteById(id);
+        }
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
+        return "curvePoint/list";
     }
 }
