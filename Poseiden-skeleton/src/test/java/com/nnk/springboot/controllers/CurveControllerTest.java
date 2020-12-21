@@ -243,7 +243,7 @@ class CurveControllerTest {
     void showUpdateForm_error() {
         //***********GIVEN*************
         when(curvePointRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
-        int bidListIdGiven = 5;
+        int curveIdGiven = 5;
         String urlTemplate = String.format("%s%s%s",
                 rootURL,
                 "update/",
@@ -255,7 +255,7 @@ class CurveControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(curvePointRepository, Mockito.never()).findById(bidListIdGiven);
+        verify(curvePointRepository, Mockito.never()).findById(curveIdGiven);
 
         //**************WHEN-THEN****************************
         Exception exception = assertThrows(NestedServletException.class, () ->
@@ -267,7 +267,7 @@ class CurveControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(curvePointRepository, Mockito.times(1)).findById(bidListIdGiven);
+        verify(curvePointRepository, Mockito.times(1)).findById(curveIdGiven);
     }
 
     @Order(8)
