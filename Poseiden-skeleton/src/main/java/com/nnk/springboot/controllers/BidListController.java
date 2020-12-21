@@ -63,7 +63,7 @@ public class BidListController {
                             @RequestBody @Valid BidList bidList,
                             BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "/bidList/update";
+            return "bidList/update";
         }
 
         bidList.setId(id);
