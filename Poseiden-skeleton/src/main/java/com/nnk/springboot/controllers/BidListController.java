@@ -50,12 +50,11 @@ public class BidListController {
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id,
                                  Model model) {
-        Optional<BidList> bidOptional = bidListRepository.findById(id);
-        if(bidOptional.isPresent()){
-            model.addAttribute("bid", bidOptional.get());
-        } else {
-            throw new IllegalArgumentException("Invalid bid Id: there is no bid with Id:" + id);
-        }
+        String errorMessage = "Invalid bid Id: there is no bid with Id: ";
+
+        BidList bid = bidListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(errorMessage + id));
+        model.addAttribute("bid", bid);
         return "bidList/update";
     }
 
