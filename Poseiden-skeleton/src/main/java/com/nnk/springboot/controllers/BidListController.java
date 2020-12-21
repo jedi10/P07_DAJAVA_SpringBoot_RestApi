@@ -39,12 +39,12 @@ public class BidListController {
     public String validate(@RequestBody @Valid BidList bid,
                            BindingResult result,
                            Model model) {
-        if (!result.hasErrors()) {
-            bidListRepository.save(bid);
-            model.addAttribute("bids", bidListRepository.findAll());
-            return "bidList/list";
+        if (result.hasErrors()) {
+            return "bidList/add";
         }
-        return "bidList/add";
+        bidListRepository.save(bid);
+        model.addAttribute("bids", bidListRepository.findAll());
+        return "bidList/list";
     }
 
     @GetMapping(value = "update/{id}")
