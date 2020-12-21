@@ -127,7 +127,7 @@ class BidListControllerTest {
 
     }
 
-    @DisplayName("Add Url")
+    @DisplayName("Show Add Form")
     @Order(3)
     @Test
     void addBidForm() throws Exception {
@@ -327,6 +327,7 @@ class BidListControllerTest {
         verify(bidListRepository, Mockito.times(1)).save(ArgumentMatchers.refEq(bidListUpdated));
     }
 
+    @Order(9)
     @Test
     void deleteBid() throws Exception {
         //***********GIVEN*************
