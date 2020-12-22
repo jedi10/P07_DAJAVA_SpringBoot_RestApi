@@ -80,7 +80,7 @@ class CurveControllerTest {
 
     @Order(1)
     @Test
-    void bidListController_MockMVC(){
+    void curveController_MockMVC(){
         assertNotNull(mockMvc);
         assertNotNull(curvePointController);
     }

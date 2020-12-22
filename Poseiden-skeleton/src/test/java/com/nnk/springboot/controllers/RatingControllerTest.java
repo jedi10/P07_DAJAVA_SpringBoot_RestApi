@@ -82,7 +82,7 @@ class RatingControllerTest {
 
     @Order(1)
     @Test
-    void bidListController_MockMVC(){
+    void ruleNameController_MockMVC(){
         assertNotNull(mockMvc);
         assertNotNull(ratingController);
     }
