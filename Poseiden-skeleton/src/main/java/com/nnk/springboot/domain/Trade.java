@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Entity
@@ -21,6 +22,7 @@ public class Trade {
     @Setter
     private Integer id;
 
+    @NotBlank(message = "account is mandatory")
     @Getter
     @Setter
     private String account;
@@ -121,5 +123,27 @@ public class Trade {
     public Trade(String account, String type) {
         this.account = account;
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Trade)) return false;
+        Trade trade = (Trade) o;
+        return Objects.equals(account, trade.account) &&
+                Objects.equals(type, trade.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(account, type);
+    }
+
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "account='" + account + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }
