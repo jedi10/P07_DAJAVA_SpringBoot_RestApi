@@ -110,6 +110,8 @@ class RuleNameControllerTest {
                 .andExpect(view().name("ruleName/list"))
                 .andExpect(content().contentType(MediaType.TEXT_HTML_VALUE+";charset=UTF-8"))
                 .andExpect(content().string(containsString("Rule List")))
+                .andExpect(model().attributeExists("ruleNames"))
+                .andExpect(model().attribute("ruleNames", ruleNameListGiven))
                 .andReturn();
 
         //***********************************************************

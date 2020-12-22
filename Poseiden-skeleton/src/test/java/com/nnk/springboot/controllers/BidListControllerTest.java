@@ -118,6 +118,8 @@ class BidListControllerTest {
                 .andExpect(view().name("bidList/list"))
                 .andExpect(content().contentType(MediaType.TEXT_HTML_VALUE+";charset=UTF-8"))
                 .andExpect(content().string(containsString("Bid List")))
+                .andExpect(model().attributeExists("bids"))
+                .andExpect(model().attribute("bids", bidListGiven))
                 .andReturn();
 
         //***********************************************************
