@@ -29,6 +29,7 @@ import java.util.List;
 import static com.nnk.springboot.tools.Jackson.convertJavaToJson;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -356,5 +357,29 @@ class RuleNameControllerTest {
         //***********************************************************
         verify(ruleNameRepository, Mockito.times(1)).findById(ruleNameId);
         verify(ruleNameRepository, Mockito.times(1)).deleteById(ruleNameId);
+    }
+
+    @Order(10)
+    @Test
+    void deleteRuleName_errorAccess() throws Exception {
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "delete/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .delete(urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("USER"))
+                .characterEncoding("UTF-8")
+                .accept(MediaType.TEXT_HTML_VALUE);
+
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isForbidden())
+                .andReturn();
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(ruleNameRepository, Mockito.never()).findById(any());
+        verify(ruleNameRepository, Mockito.never()).deleteById(any());
     }
 }

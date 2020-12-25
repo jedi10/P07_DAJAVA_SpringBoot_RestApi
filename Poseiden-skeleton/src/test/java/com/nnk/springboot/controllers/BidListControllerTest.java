@@ -366,6 +366,30 @@ class BidListControllerTest {
         verify(bidListRepository, Mockito.times(1)).findById(bidListId);
         verify(bidListRepository, Mockito.times(1)).deleteById(bidListId);
     }
+
+    @Order(10)
+    @Test
+    void deleteBidList_errorAccess() throws Exception {
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "delete/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .delete(urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("USER"))
+                .characterEncoding("UTF-8")
+                .accept(MediaType.TEXT_HTML_VALUE);
+
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isForbidden())
+                .andReturn();
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(bidListRepository, Mockito.never()).findById(ArgumentMatchers.any());
+        verify(bidListRepository, Mockito.never()).deleteById(ArgumentMatchers.any());
+    }
 }
 
 
