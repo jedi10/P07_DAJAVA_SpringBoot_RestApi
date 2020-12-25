@@ -121,7 +121,7 @@ class TradeControllerTest {
     @DisplayName("Show Add Form")
     @Order(3)
     @Test
-    void addCurveForm() throws Exception {
+    void addTradeForm() throws Exception {
         //***********GIVEN*************
         String uri = "add";
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
