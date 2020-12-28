@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "rating")
@@ -35,6 +36,7 @@ public class Rating {
     @Setter
     private String fitchRating;
 
+    @NotNull(message = "orderNumber is mandatory")
     @Column(name = "order_number")
     @Getter
     @Setter
@@ -53,5 +55,31 @@ public class Rating {
         this.sandPRating = sandPRating;
         this.fitchRating = fitchRating;
         this.orderNumber = orderNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rating)) return false;
+        Rating rating = (Rating) o;
+        return Objects.equals(moodysRating, rating.moodysRating) &&
+                Objects.equals(sandPRating, rating.sandPRating) &&
+                Objects.equals(fitchRating, rating.fitchRating) &&
+                Objects.equals(orderNumber, rating.orderNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(moodysRating, sandPRating, fitchRating, orderNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "Rating{" +
+                "moodysRating='" + moodysRating + '\'' +
+                ", sandPRating='" + sandPRating + '\'' +
+                ", fitchRating='" + fitchRating + '\'' +
+                ", orderNumber=" + orderNumber +
+                '}';
     }
 }
