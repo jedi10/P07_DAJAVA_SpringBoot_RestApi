@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import org.springframework.stereotype.Controller;
@@ -29,13 +30,13 @@ public class CurveController {
     }
 
     @GetMapping(value = "add")
-    public String addCurveForm(CurvePoint curve) {
-
+    public String addCurveForm(CurvePoint curve, Model model) {
+        model.addAttribute("curvePoint", new CurvePoint());
         return "curvePoint/add";
     }
 
     @PostMapping(value = "validate")
-    public String validate(@RequestBody @Valid CurvePoint curvePoint,
+    public String validate(@Valid CurvePoint curvePoint,
                            BindingResult result,
                            Model model) {
         if (result.hasErrors()){
@@ -56,9 +57,9 @@ public class CurveController {
         return "curvePoint/update";
     }
 
-    @PutMapping(value = "update/{id}")
+    @PostMapping(value = "update/{id}")
     public String updateCurve(@PathVariable("id") Integer id,
-                            @RequestBody @Valid CurvePoint curvePoint,
+                            @Valid CurvePoint curvePoint,
                             BindingResult result, Model model) {
         if(result.hasErrors()){
             return "curvePoint/update";
@@ -70,7 +71,7 @@ public class CurveController {
     }
 
     @RolesAllowed("ADMIN")
-    @DeleteMapping(value = "delete/{id}")
+    @GetMapping(value = "delete/{id}")
     public String deleteCurve(@PathVariable("id") Integer id,
                             Model model) {
         Optional<CurvePoint> curvePoint = curvePointRepository.findById(id);
