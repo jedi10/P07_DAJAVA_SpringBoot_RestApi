@@ -14,9 +14,33 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/trade/update/{id}(id=${trade.id})}" th:object="${trade}" method="post" class="form-horizontal" style="width: 100%">
-			<!--
-			TODO: Create a form to edit the values of Trade, there are 2 buttons: Update data and Cancel to the Trade List
-			 -->
+
+			<div class = "form-group row ">
+				<label for = "account" class = "col-sm-2 col-form-label">Account</label>
+				<div class = "col-sm-4">
+					<input th:field="*{account}" id = "account" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "type" class = "col-sm-2 col-form-label">Type</label>
+				<div class = "col-sm-4">
+					<input th:field="*{type}" id = "type" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "buyquantity" class = "col-sm-2 col-form-label">Buy Quantity</label>
+				<div class = "col-sm-4">
+					<input th:field="*{buyQuantity}" id = "buyquantity" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row">
+				<div class = "col-sm-5">
+					<button type = "submit" class = "btn btn-primary">Update data</button>
+				</div>
+				<div class = "col-sm-5">
+					<button type = "reset" class = "btn btn-danger">Cancel</button>
+				</div>
+			</div>
 		</form>
 	</div>
 
