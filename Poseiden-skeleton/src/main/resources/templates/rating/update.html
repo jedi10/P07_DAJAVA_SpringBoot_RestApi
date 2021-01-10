@@ -15,9 +15,39 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/rating/update/{id}(id=${rating.id})}" th:object="${rating}" method="post" class="form-horizontal" style="width: 100%">
-			<!--
-			TODO: Create a form to edit the values of Rating, there are 2 buttons: Update data and Cancel to the Rating
-			 -->
+
+			<div class = "form-group row ">
+				<label for = "moodysrating" class = "col-sm-2 col-form-label">Moodys Rating</label>
+				<div class = "col-sm-4">
+					<input th:field="*{moodysRating}" id = "moodysrating" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "sandprating" class = "col-sm-2 col-form-label">Sand P Rating</label>
+				<div class = "col-sm-4">
+					<input th:field="*{sandPRating}" id = "sandprating" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "fitchrating" class = "col-sm-2 col-form-label">Fitch Rating</label>
+				<div class = "col-sm-4">
+					<input th:field="*{fitchRating}" id = "fitchrating" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "ordernumber" class = "col-sm-2 col-form-label">Order Number</label>
+				<div class = "col-sm-4">
+					<input th:field="*{orderNumber}" id = "ordernumber" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row">
+				<div class = "col-sm-5">
+					<button type = "submit" class = "btn btn-primary">Update data</button>
+				</div>
+				<div class = "col-sm-5">
+					<button type = "reset" class = "btn btn-danger">Cancel</button>
+				</div>
+			</div>
 		</form>
 	</div>
 
