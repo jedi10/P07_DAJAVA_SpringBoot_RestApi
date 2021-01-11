@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/")
@@ -30,12 +32,13 @@ public class UserController {
     }
 
     @GetMapping(value = "add")
-    public String addUser(User bid) {
+    public String addUser(User user, Model model) {
+        model.addAttribute("user", new User());
         return "user/add";
     }
 
     @PostMapping(value = "validate")
-    public String validate(@RequestBody @Valid User user,
+    public String validate(@Valid User user,
                            BindingResult result,
                            Model model) {
         if (!result.hasErrors()) {
@@ -56,9 +59,9 @@ public class UserController {
         return "user/update";
     }
 
-    @PutMapping(value = "update/{id}")
+    @PostMapping(value = "update/{id}")
     public String updateUser(@PathVariable("id") Integer id,
-                             @RequestBody @Valid User user,
+                             @Valid User user,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "user/update";
@@ -74,10 +77,12 @@ public class UserController {
 
     @RolesAllowed("ADMIN")
     //@PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(value = "delete/{id}")
+    @GetMapping(value = "delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        userRepository.delete(user);
+        if (user != null){
+            userRepository.delete(user);
+        }
         model.addAttribute("users", userRepository.findAll());
         return "user/list";
     }
