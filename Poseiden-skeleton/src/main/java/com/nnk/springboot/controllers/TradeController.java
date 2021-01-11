@@ -29,13 +29,14 @@ public class TradeController {
     }
 
     @GetMapping(value = "add")
-    public String addUser(Trade bid)
+    public String addUser(Trade bid, Model model)
     {
+        model.addAttribute("trade", new Trade());
         return "trade/add";
     }
 
     @PostMapping(value = "validate")
-    public String validate(@RequestBody @Valid Trade trade,
+    public String validate(@Valid Trade trade,
                            BindingResult result,
                            Model model) {
         if (result.hasErrors()) {
@@ -57,9 +58,9 @@ public class TradeController {
         return "trade/update";
     }
 
-    @PutMapping(value = "update/{id}")
+    @PostMapping(value = "update/{id}")
     public String updateTrade(@PathVariable("id") Integer id,
-                              @RequestBody @Valid Trade trade,
+                              @Valid Trade trade,
                               BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "trade/update";
@@ -70,7 +71,7 @@ public class TradeController {
         return "trade/list";
     }
 
-    @DeleteMapping(value = "delete/{id}")
+    @GetMapping(value = "delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
         Optional<Trade> bidOptional = tradeRepository.findById(id);
         if(bidOptional.isPresent()){

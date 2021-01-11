@@ -31,12 +31,13 @@ public class BidListController {
     }
 
     @GetMapping(value = "add")
-    public String addBidForm(BidList bid) {
+    public String addBidForm(BidList bid, Model model) {
+        model.addAttribute("bid", new BidList());
         return "bidList/add";
     }
 
-    @PostMapping(value = "validate")
-    public String validate(@RequestBody @Valid BidList bid,
+    @PostMapping(value = "validate", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE+";charset=UTF-8"})//"application/x-www-form-urlencoded")
+    public String validate(@Valid BidList bid,
                            BindingResult result,
                            Model model) {
         if (result.hasErrors()) {
@@ -58,9 +59,9 @@ public class BidListController {
         return "bidList/update";
     }
 
-    @PutMapping(value = "update/{id}")
+    @PostMapping(value = "update/{id}")
     public String updateBid(@PathVariable("id") Integer id,
-                            @RequestBody @Valid BidList bidList,
+                            @Valid BidList bidList,
                             BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "bidList/update";
@@ -73,7 +74,7 @@ public class BidListController {
     }
 
     @RolesAllowed("ADMIN")
-    @DeleteMapping(value = "delete/{id}")
+    @GetMapping(value = "delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         Optional<BidList> bidOptional = bidListRepository.findById(id);
         if(bidOptional.isPresent()){

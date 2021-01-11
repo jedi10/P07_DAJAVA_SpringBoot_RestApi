@@ -30,13 +30,14 @@ public class RatingController {
     }
 
     @GetMapping(value = "add")
-    public String addRatingForm(Rating rating)
+    public String addRatingForm(Rating rating, Model model)
     {
+        model.addAttribute("rating", new Rating());
         return "rating/add";
     }
 
     @PostMapping(value = "validate")
-    public String validate(@RequestBody @Valid Rating rating,
+    public String validate(@Valid Rating rating,
                            BindingResult result,
                            Model model) {
         if(result.hasErrors()){
@@ -57,9 +58,9 @@ public class RatingController {
         return "rating/update";
     }
 
-    @PutMapping(value = "update/{id}")
+    @PostMapping(value = "update/{id}")
     public String updateRating(@PathVariable("id") Integer id,
-                               @RequestBody @Valid Rating rating,
+                               @Valid Rating rating,
                                BindingResult result,
                                Model model) {
         if(result.hasErrors()){
@@ -72,7 +73,7 @@ public class RatingController {
     }
 
     @RolesAllowed("ADMIN")
-    @DeleteMapping("delete/{id}")
+    @GetMapping(value ="delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
         Optional<Rating> rating = ratingRepository.findById(id);
         if(rating.isPresent()){

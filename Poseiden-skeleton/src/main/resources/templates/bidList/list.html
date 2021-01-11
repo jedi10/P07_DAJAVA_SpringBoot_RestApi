@@ -5,10 +5,14 @@
 <meta charset="utf-8"/>
 <title>Home</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+<link rel="stylesheet"
+		  href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+		  integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+		  crossorigin="anonymous">
 </head>
 <body>
 <div class="container">
-	<div class="row">
+	<div th:switch="${bids}"  class="row">
 		<div class="col-6">
 			<a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
 			<a href="/curvePoint/list">Curve Points</a>&nbsp;|&nbsp;
@@ -26,7 +30,8 @@
 	<div class="row"><h2>Bid List</h2></div>
 	<div class="row">
 		<a href="/bidList/add" class="btn btn-primary btn-sm">Add New</a>
-		<table class="table table-bordered">
+		<h3 th:if="${#lists.isEmpty(bids)}">No Bids yet!</h3>
+		<table th:unless="${#lists.isEmpty(bids)}" class="table table-bordered">
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -37,10 +42,23 @@
 				</tr>
 			</thead>
 			<tbody>
-				<!-- TODO: Show all Bids to the table, the Action column will have Edit & Delete buttons -->
+				<tr th:each="bidItem : ${bids}">
+					<td th:text="${bidItem.getId()}"></td>
+					<td th:text="${bidItem.getAccount()}"></td>
+					<td th:text="${bidItem.getType()}"></td>
+					<td th:text="${bidItem.getBidQuantity()}"></td>
+					<td>
+						<a th:href="@{/bidList/update/{id}(id=${bidItem.getId()})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a>
+						<a th:href="@{/bidList/delete/{id}(id=${bidItem.getId()})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
 </div>
 </body>
 </html>
+
+<!--https://www.javaguides.net/2019/04/spring-mvc-thymeleaf-crud-example-tutorial.html-->
+<!--https://frontbackend.com/thymeleaf/using-conditions-in-thymeleaf-->
+<!-- table avec gestion pagination https://frontbackend.com/thymeleaf/spring-boot-bootstrap-thymeleaf-table -->

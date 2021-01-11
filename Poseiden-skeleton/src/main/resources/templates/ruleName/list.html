@@ -2,9 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" 
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+	<meta charset="utf-8"/>
+	<title>Home</title>
+	<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+	<link rel="stylesheet"
+		  href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+		  integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+		  crossorigin="anonymous">
 </head>
 <body>
 <div class="container">
@@ -26,7 +30,8 @@
 	<div class="row"><h2>Rule List</h2></div>
 	<div class="row">
 		<a href="/ruleName/add" class="btn btn-primary btn-sm">Add New</a>
-		<table class="table table-bordered">
+		<h3 th:if="${#lists.isEmpty(ruleNames)}">No Rule yet!</h3>
+		<table th:unless="${#lists.isEmpty(ruleNames)}" class="table table-bordered">
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -40,7 +45,19 @@
 				</tr>
 			</thead>
 			<tbody>
-			<!-- TODO: Show all RuleName to the table, the Action column will have Edit & Delete buttons -->
+				<tr th:each="ruleItem : ${ruleNames}">
+					<td th:text="${ruleItem.getId()}"></td>
+					<td th:text="${ruleItem.getName()}"></td>
+					<td th:text="${ruleItem.getDescription()}"></td>
+					<td th:text="${ruleItem.getJson()}"></td>
+					<td th:text="${ruleItem.getTemplate()}"></td>
+					<td th:text="${ruleItem.getSqlStr()}"></td>
+					<td th:text="${ruleItem.getSqlPart()}"></td>
+					<td>
+						<a th:href="@{/ruleName/update/{id}(id=${ruleItem.getId()})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a>
+						<a th:href="@{/ruleName/delete/{id}(id=${ruleItem.getId()})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

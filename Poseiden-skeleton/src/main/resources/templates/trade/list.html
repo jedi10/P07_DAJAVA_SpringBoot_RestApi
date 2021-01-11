@@ -2,9 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" 
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+	<meta charset="utf-8"/>
+	<title>Home</title>
+	<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+	<link rel="stylesheet"
+		  href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+		  integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+		  crossorigin="anonymous">
 </head>
 <body>
 <div class="container">
@@ -26,7 +30,8 @@
 	<div class="row"><h2>Trade List</h2></div>
 	<div class="row">
 		<a href="/trade/add" class="btn btn-primary btn-sm">Add New</a>
-		<table class="table table-bordered">
+		<h3 th:if="${#lists.isEmpty(trades)}">No Trade yet!</h3>
+		<table th:unless="${#lists.isEmpty(trades)}" class="table table-bordered">
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -37,7 +42,16 @@
 				</tr>
 			</thead>
 			<tbody>
-			<!-- TODO: Show all Trade to the table, the Action column will have Edit & Delete buttons -->
+				<tr th:each="tradeItem : ${trades}">
+					<td th:text="${tradeItem.getId()}"></td>
+					<td th:text="${tradeItem.getAccount()}"></td>
+					<td th:text="${tradeItem.getType()}"></td>
+					<td th:text="${tradeItem.getBuyQuantity()}"></td>
+					<td>
+						<a th:href="@{/trade/update/{id}(id=${tradeItem.getId()})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a>
+						<a th:href="@{/trade/delete/{id}(id=${tradeItem.getId()})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

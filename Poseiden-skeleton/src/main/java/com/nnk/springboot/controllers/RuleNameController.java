@@ -29,12 +29,13 @@ public class RuleNameController {
     }
 
     @GetMapping(value = "add")
-    public String addRuleForm(RuleName ruleName) {
+    public String addRuleForm(RuleName ruleName, Model model) {
+        model.addAttribute("ruleName", new RuleName());
         return "ruleName/add";
     }
 
     @PostMapping(value = "validate")
-    public String validate(@RequestBody @Valid RuleName ruleName,
+    public String validate(@Valid RuleName ruleName,
                            BindingResult result,
                            Model model) {
         if(result.hasErrors()){
@@ -55,9 +56,9 @@ public class RuleNameController {
         return "ruleName/update";
     }
 
-    @PutMapping(value = "update/{id}")
+    @PostMapping(value = "update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id,
-                                 @RequestBody @Valid RuleName ruleName,
+                                 @Valid RuleName ruleName,
                                  BindingResult result,
                                  Model model) {
         if(result.hasErrors()){
@@ -70,7 +71,7 @@ public class RuleNameController {
     }
 
     @RolesAllowed("ADMIN")
-    @DeleteMapping(value = "delete/{id}")
+    @GetMapping(value = "delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id,
                                  Model model) {
         Optional<RuleName> ruleName = ruleNameRepository.findById(id);

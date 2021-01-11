@@ -14,9 +14,33 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/curvePoint/update/{id}(id=${curvePoint.id})}" th:object="${curvePoint}" method="post" class="form-horizontal" style="width: 100%">
-			<!--
-			TODO: Create a form to edit the values of CurvePoint, there are 2 buttons: Update data and Cancel to the Curve Point
-			 -->
+
+			<div class = "form-group row ">
+				<label for = "curveId" class = "col-sm-2 col-form-label">Curve ID</label>
+				<div class = "col-sm-4">
+					<input th:field="*{curveId}" id = "curveId" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "term" class = "col-sm-2 col-form-label">Term</label>
+				<div class = "col-sm-4">
+					<input th:field="*{term}" id = "term" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "value" class = "col-sm-2 col-form-label">Value</label>
+				<div class = "col-sm-4">
+					<input th:field="*{value}" id = "value" type = "text" class = "form-control" placeholder = "Mandatory">
+				</div>
+			</div>
+			<div class = "form-group row">
+				<div class = "col-sm-5">
+					<button type = "submit" class = "btn btn-primary">Update data</button>
+				</div>
+				<div class = "col-sm-5">
+					<button type = "reset" class = "btn btn-danger">Cancel</button>
+				</div>
+			</div>
 		</form>
 	</div>
 
