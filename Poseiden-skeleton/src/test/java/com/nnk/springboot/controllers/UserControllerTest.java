@@ -1,7 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.service.UserDalServiceBean;
+import com.nnk.springboot.web.dto.UserDTO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nnk.springboot.tools.Jackson.convertJavaToJson;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -46,7 +47,7 @@ class UserControllerTest {
     public MockMvc mockMvc;
 
     @MockBean
-    private UserRepository userRepository;
+    private UserDalServiceBean userService;
 
     @InjectMocks
     private UserController userController;
@@ -62,6 +63,7 @@ class UserControllerTest {
         userListGiven.add(userGiven2);
     }
 
+    private UserDTO userCreatedDto = new UserDTO("titi", "XXX", "Inspector", "USER");
     private User userCreated = new User("titi", "XXX", "Inspector", "USER");
     private User userUpdated= new User("tictac", "XXX", "Bread", "USER");
 
@@ -69,10 +71,10 @@ class UserControllerTest {
     void setUp() {
         //***********GIVEN*************
         //          Mockito config
-        when(userRepository.findAll()).thenReturn(userListGiven);
-        when(userRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(userUpdated));
-        when(userRepository.save(userCreated)).thenReturn(userCreated);
-        when(userRepository.save(userUpdated)).thenReturn(userUpdated);
+        when(userService.findAll()).thenReturn(userListGiven);
+        when(userService.findOne(anyInt())).thenReturn(userUpdated);//java.util.Optional.ofNullable(userUpdated)
+        when(userService.create(userCreatedDto)).thenReturn(userCreated);
+        when(userService.update(userUpdated)).thenReturn(userUpdated);
     }
 
     @AfterEach
@@ -98,7 +100,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).findAll();
+        verify(userService, Mockito.never()).findAll();
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
@@ -113,7 +115,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.times(1)).findAll();
+        verify(userService, Mockito.times(1)).findAll();
     }
 
     @DisplayName("Show Add Form")
@@ -156,7 +158,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).save(userCreated);
+        verify(userService, Mockito.never()).create(userCreatedDto);
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
@@ -172,21 +174,21 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.times(1)).save(any());
-        verify(userRepository, Mockito.times(1))
-                .save(ArgumentMatchers.refEq(userCreated, "password"));
-        verify(userRepository, Mockito.times(1)).findAll();
+        verify(userService, Mockito.times(1)).create(any());
+        verify(userService, Mockito.times(1))
+                .create(ArgumentMatchers.refEq(userCreatedDto, "password"));
+        verify(userService, Mockito.times(1)).findAll();
     }
 
     @DisplayName("Add - Validate - Error")
     @Order(5)
     @Test
-    void validate_errorTrade() throws Exception {
+    void validate_error() throws Exception {
         //***********GIVEN*************
         String uri =  "validate";
-        userCreated.setUsername(null);
-        String jsonGiven = convertJavaToJson(userCreated);
-        String stringGiven = userCreated.toString();
+        userCreatedDto.setUsername(null);
+        String jsonGiven = convertJavaToJson(userCreatedDto);
+        //String stringGiven = userCreatedDto.toString();
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post(rootURL + uri)
                 .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("USER", "ADMIN"))
@@ -205,8 +207,8 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).save(userCreated);
-        verify(userRepository, Mockito.never()).findAll();
+        verify(userService, Mockito.never()).create(userCreatedDto);
+        verify(userService, Mockito.never()).findAll();
     }
 
     @Order(6)
@@ -227,7 +229,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).findById(userId);
+        verify(userService, Mockito.never()).findOne(userId);
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
@@ -242,15 +244,16 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.times(1)).findById(userId);
+        verify(userService, Mockito.times(1)).findOne(userId);
     }
 
     @Order(7)
     @Test
     void showUpdateForm_error() {
         //***********GIVEN*************
-        when(userRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
         int userIdGiven = 5;
+        when(userService.findOne(anyInt())).thenThrow(new IllegalArgumentException("Invalid user Id:" + userIdGiven));//.thenReturn(java.util.Optional.empty())
+
         String urlTemplate = String.format("%s%s%s",
                 rootURL,
                 "update/",
@@ -262,7 +265,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).findById(userIdGiven);
+        verify(userService, Mockito.never()).findOne(userIdGiven);
 
         //**************WHEN-THEN****************************
         Exception exception = assertThrows(NestedServletException.class, () ->
@@ -270,11 +273,12 @@ class UserControllerTest {
                 ;
         assertNotNull(exception);
         assertTrue(exception.getMessage().contains("Invalid user Id:"));
+        //assertEquals("java.lang.NullPointerException", exception.getCause().toString());//When Mock return null
 
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.times(1)).findById(userIdGiven);
+        verify(userService, Mockito.times(1)).findOne(userIdGiven);
     }
 
     @Disabled
@@ -301,7 +305,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).save(userUpdated);
+        verify(userService, Mockito.never()).update(userUpdated);
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
@@ -317,10 +321,10 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.times(1)).save(any());
-        verify(userRepository, Mockito.times(1))
-                .save(ArgumentMatchers.refEq(userUpdated, "password", "id"));
-        verify(userRepository, Mockito.times(1)).findAll();
+        verify(userService, Mockito.times(1)).update(any());
+        verify(userService, Mockito.times(1))
+                .update(ArgumentMatchers.refEq(userUpdated, "password", "id"));
+        verify(userService, Mockito.times(1)).findAll();
     }
 
     @Order(9)
@@ -342,7 +346,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).findById(userId);
+        verify(userService, Mockito.never()).findOne(userId);
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
@@ -357,8 +361,8 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.times(1)).findById(userId);
-        verify(userRepository, Mockito.times(1)).delete(userUpdated);
+        verify(userService, Mockito.never()).findOne(userId);
+        verify(userService, Mockito.times(1)).delete(userUpdated.getId());
     }
 
     @Order(10)
@@ -381,7 +385,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userRepository, Mockito.never()).findById(any());
-        verify(userRepository, Mockito.never()).deleteById(any());
+        verify(userService, Mockito.never()).findOne(any());
+        verify(userService, Mockito.never()).delete(any());
     }
 }
