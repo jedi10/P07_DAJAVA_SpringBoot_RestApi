@@ -1,8 +1,9 @@
 package com.nnk.springboot.web.dto;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Setter;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 public class UserDTO {
@@ -32,14 +34,6 @@ public class UserDTO {
     @NotNull(message = "Role is mandatory")
     @Size(min = 2, max = 35, message = "Role must be between 2 and 35 characters long")
     private String role;
-
-    public UserDTO(String username, String password, String fullname, String role) {
-        super();
-        this.username = username;
-        this.password = password;
-        this.fullname = fullname;
-        this.role = role;
-    }
 
     @Override
     public boolean equals(Object o) {
