@@ -30,8 +30,7 @@ import java.util.List;
 import static com.nnk.springboot.tools.Jackson.convertJavaToJson;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -65,6 +64,7 @@ class UserControllerTest {
 
     private UserDTO userCreatedDto = new UserDTO("titi", "XXX", "Inspector", "USER");
     private User userCreated = new User("titi", "XXX", "Inspector", "USER");
+    private UserDTO userUpdatedDto = new UserDTO("tictac", "XXX", "Bread", "USER");
     private User userUpdated= new User("tictac", "XXX", "Bread", "USER");
 
     @BeforeEach
@@ -74,7 +74,7 @@ class UserControllerTest {
         when(userService.findAll()).thenReturn(userListGiven);
         when(userService.findOne(anyInt())).thenReturn(userUpdated);//java.util.Optional.ofNullable(userUpdated)
         when(userService.create(userCreatedDto)).thenReturn(userCreated);
-        when(userService.update(userUpdated)).thenReturn(userUpdated);
+        when(userService.update(userUpdatedDto, 5)).thenReturn(userUpdated);
     }
 
     @AfterEach
@@ -217,7 +217,7 @@ class UserControllerTest {
     void showUpdateForm(String id) throws Exception {
         //***********GIVEN*************
         int userId = Integer.parseInt(id);
-        userUpdated.setId(userId);
+        //userUpdated.setId(userId);
         String urlTemplate = String.format("%s%s%s",
                 rootURL,
                 "update/",
@@ -305,7 +305,7 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at start***************
         //***********************************************************
-        verify(userService, Mockito.never()).update(userUpdated);
+        verify(userService, Mockito.never()).update(userUpdatedDto, 5);
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
@@ -321,9 +321,9 @@ class UserControllerTest {
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
-        verify(userService, Mockito.times(1)).update(any());
+        verify(userService, Mockito.times(1)).update(any(), any());
         verify(userService, Mockito.times(1))
-                .update(ArgumentMatchers.refEq(userUpdated, "password", "id"));
+                .update(ArgumentMatchers.refEq(userUpdatedDto, "password"), 5);
         verify(userService, Mockito.times(1)).findAll();
     }
 

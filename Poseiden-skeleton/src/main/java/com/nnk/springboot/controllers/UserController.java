@@ -53,22 +53,19 @@ public class UserController {
         User user = userService.findOne(id);
         user.setPassword("");
         model.addAttribute("user", user);
+        model.addAttribute("id", id);
         return "user/update";
     }
 
     @PostMapping(value = "update/{id}")
     public String updateUser(@PathVariable("id") Integer id,
-                             @Valid User user,
+                             @Valid UserDTO user,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("user", user);
             return "user/update";
         }
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setId(id);
-        userService.update(user);
+        userService.update(user, id);
         model.addAttribute("users", userService.findAll());
         return "user/list";
     }

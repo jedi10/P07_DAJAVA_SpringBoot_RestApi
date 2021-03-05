@@ -12,7 +12,7 @@ public interface IUserDalService extends UserDetailsService {
     Collection<User> findAll();
     User findOne(Integer id);
     User findByName(String name);
-    User update(User user);
+    User update(UserDTO user, Integer id);
     void delete(Integer id);
     void deleteAll();
 

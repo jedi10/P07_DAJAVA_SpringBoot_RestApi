@@ -87,9 +87,17 @@ public class UserDalServiceBean implements IUserDalService {
      }
 
      @Override
-     public User update(User user) {
-        if (user != null) {
-            userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + user.getId()));
+     public User update(UserDTO userDto, Integer id) {
+         User user = new User(userDto.getUsername(), userDto.getFullname(), userDto.getPassword(), userDto.getRole());
+        if (id != null) {
+            userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + user.getId()));
+            user.setId(id);
+        }
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        if (encodedPassword != null){
+            user.setPassword(encodedPassword);
+        } else {
+           throw new IllegalArgumentException("Invalid user password");
         }
         return userRepository.save(user);
      }
