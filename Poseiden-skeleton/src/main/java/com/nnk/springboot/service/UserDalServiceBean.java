@@ -34,6 +34,7 @@ public class UserDalServiceBean implements IUserDalService {
      */
     @Override
     public User create(UserDTO user) {
+        //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User userResult = new User(user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
                 user.getFullname(),
@@ -93,6 +94,7 @@ public class UserDalServiceBean implements IUserDalService {
             userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + user.getId()));
             user.setId(id);
         }
+        //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         if (encodedPassword != null){
             user.setPassword(encodedPassword);
