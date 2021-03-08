@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +63,19 @@ public class UserDalServiceBean implements IUserDalService {
 
 
      @Override
-     public Collection<User> findAll() {
-        return userRepository.findAll();
+     public Collection<UserDTO> findAll() {
+         Collection<UserDTO> userDtoList = new ArrayList<>();
+         userRepository.findAll().forEach(
+                 user -> {
+                     UserDTO userResult = new UserDTO(user.getId(),
+                             user.getUsername(),
+                             user.getPassword(),
+                             user.getFullname(),
+                             user.getRole());
+                     userDtoList.add(userResult);
+                 }
+         );
+        return userDtoList;
      }
 
      @Override

@@ -9,7 +9,7 @@ import java.util.Collection;
 public interface IUserDalService extends UserDetailsService {
 
     User create(UserDTO user);
-    Collection<User> findAll();
+    Collection<UserDTO> findAll();
     User findOne(Integer id);
     User findByName(String name);
     User update(UserDTO user, Integer id);

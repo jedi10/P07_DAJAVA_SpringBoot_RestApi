@@ -16,6 +16,8 @@ import java.util.Objects;
 @Getter
 public class UserDTO {
 
+    private Integer id;
+
     @NotBlank(message = "Username is mandatory")
     @NotNull(message = "UserName is mandatory")
     @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")

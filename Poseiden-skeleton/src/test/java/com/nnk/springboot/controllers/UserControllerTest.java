@@ -53,18 +53,18 @@ class UserControllerTest {
 
     private final String rootURL = "/user/";
 
-    private static List<User> userListGiven = new ArrayList<>();
+    private static List<UserDTO> userListGiven = new ArrayList<>();
 
     static {
-        User userGiven1 = new User("toto", "XXX", "Aspic", "USER");
-        User userGiven2 = new User("seaWolf", "XXX", "Dread", "ADMIN");
+        UserDTO userGiven1 = new UserDTO(1, "toto", "XXX", "Aspic", "USER");
+        UserDTO userGiven2 = new UserDTO(2, "seaWolf", "XXX", "Dread", "ADMIN");
         userListGiven.add(userGiven1);
         userListGiven.add(userGiven2);
     }
 
-    private UserDTO userCreatedDto = new UserDTO("titi", "XXX", "Inspector", "USER");
+    private UserDTO userCreatedDto = new UserDTO(3, "titi", "XXX", "Inspector", "USER");
     private User userCreated = new User("titi", "XXX", "Inspector", "USER");
-    private UserDTO userUpdatedDto = new UserDTO("tictac", "XXX", "Bread", "USER");
+    private UserDTO userUpdatedDto = new UserDTO(4, "tictac", "XXX", "Bread", "USER");
     private User userUpdated= new User("tictac", "XXX", "Bread", "USER");
 
     @BeforeEach
