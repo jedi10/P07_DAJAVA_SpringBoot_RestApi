@@ -38,6 +38,6 @@ class HomeControllerTest {
     void adminHome() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/admin/home"))
                 .andExpect(status().isFound())//HttpStatus 302
-                .andExpect(redirectedUrl("/bidList/list"));
+                .andExpect(redirectedUrl("/"));
     }
 }
