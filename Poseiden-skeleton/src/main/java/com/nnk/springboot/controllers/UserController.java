@@ -3,7 +3,6 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.IUserDalService;
 import com.nnk.springboot.web.dto.UserDTO;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import java.util.Collection;
 
 @Controller
 @RequestMapping("/user/")
@@ -25,7 +25,8 @@ public class UserController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model)
     {
-        model.addAttribute("users", userService.findAll());
+        Collection<UserDTO> userList =  userService.findAll();
+        model.addAttribute("users", userList);
         return "user/list";
     }
 

@@ -3,6 +3,7 @@ package com.nnk.springboot.service;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.web.dto.UserDTO;
+import com.nnk.springboot.web.dto.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,10 +37,8 @@ public class UserDalServiceBean implements IUserDalService {
     @Override
     public User create(UserDTO user) {
         //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        User userResult = new User(user.getUsername(),
-                passwordEncoder.encode(user.getPassword()),
-                user.getFullname(),
-                user.getRole());
+        User userResult = UserMapper.INSTANCE.toUser(user);
+        userResult.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(userResult);
     }
 
@@ -67,11 +66,7 @@ public class UserDalServiceBean implements IUserDalService {
          Collection<UserDTO> userDtoList = new ArrayList<>();
          userRepository.findAll().forEach(
                  user -> {
-                     UserDTO userResult = new UserDTO(user.getId(),
-                             user.getUsername(),
-                             user.getPassword(),
-                             user.getFullname(),
-                             user.getRole());
+                     UserDTO userResult = UserMapper.INSTANCE.fromUser(user);
                      userDtoList.add(userResult);
                  }
          );
