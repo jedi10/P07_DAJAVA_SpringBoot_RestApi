@@ -74,9 +74,13 @@ public class UserDalServiceBean implements IUserDalService {
      }
 
      @Override
-     public User findOne(Integer id) {
+     public UserDTO findOne(Integer id) {
+        UserDTO userResult = null;
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        return user;
+        if (user != null){
+            userResult = UserMapper.INSTANCE.fromUser(user);
+        }
+        return userResult;
      }
 
     /**

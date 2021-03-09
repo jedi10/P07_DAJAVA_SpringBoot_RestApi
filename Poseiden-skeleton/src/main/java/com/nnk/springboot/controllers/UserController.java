@@ -51,7 +51,7 @@ public class UserController {
 
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        User user = userService.findOne(id);
+        UserDTO user = userService.findOne(id);
         user.setPassword("");
         model.addAttribute("user", user);
         model.addAttribute("id", id);

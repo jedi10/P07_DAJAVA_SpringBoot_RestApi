@@ -10,7 +10,7 @@ public interface IUserDalService extends UserDetailsService {
 
     User create(UserDTO user);
     Collection<UserDTO> findAll();
-    User findOne(Integer id);
+    UserDTO findOne(Integer id);
     User findByName(String name);
     User update(UserDTO user, Integer id);
     void delete(Integer id);

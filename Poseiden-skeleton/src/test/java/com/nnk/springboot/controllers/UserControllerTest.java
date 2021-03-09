@@ -3,6 +3,7 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.UserDalServiceBean;
 import com.nnk.springboot.web.dto.UserDTO;
+import com.nnk.springboot.web.dto.mapper.UserMapper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -63,16 +64,18 @@ class UserControllerTest {
     }
 
     private UserDTO userCreatedDto = new UserDTO(3, "titi", "XXX", "Inspector", "USER");
-    private User userCreated = new User("titi", "XXX", "Inspector", "USER");
+    private User userCreated;
     private UserDTO userUpdatedDto = new UserDTO(4, "tictac", "XXX", "Bread", "USER");
-    private User userUpdated= new User("tictac", "XXX", "Bread", "USER");
+    private User userUpdated;
 
     @BeforeEach
     void setUp() {
         //***********GIVEN*************
+        userCreated = UserMapper.INSTANCE.toUser(userCreatedDto);
+        userUpdated=  UserMapper.INSTANCE.toUser(userUpdatedDto);
         //          Mockito config
         when(userService.findAll()).thenReturn(userListGiven);
-        when(userService.findOne(anyInt())).thenReturn(userUpdated);//java.util.Optional.ofNullable(userUpdated)
+        when(userService.findOne(anyInt())).thenReturn(userUpdatedDto);//java.util.Optional.ofNullable(userUpdated)
         when(userService.create(userCreatedDto)).thenReturn(userCreated);
         when(userService.update(userUpdatedDto, 5)).thenReturn(userUpdated);
     }
@@ -238,7 +241,7 @@ class UserControllerTest {
                 .andExpect(content().contentType(MediaType.TEXT_HTML_VALUE+";charset=UTF-8"))
                 .andExpect(content().string(containsString("Update")))
                 .andExpect(model().attributeExists("user"))
-                .andExpect(model().attribute("user", userUpdated))
+                .andExpect(model().attribute("user", userUpdatedDto))
                 .andReturn();
 
         //***********************************************************
