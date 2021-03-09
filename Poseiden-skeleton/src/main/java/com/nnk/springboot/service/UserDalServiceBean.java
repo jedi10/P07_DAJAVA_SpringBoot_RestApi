@@ -100,7 +100,7 @@ public class UserDalServiceBean implements IUserDalService {
 
      @Override
      public User update(UserDTO userDto, Integer id) {
-         User user = new User(userDto.getUsername(), userDto.getFullname(), userDto.getPassword(), userDto.getRole());
+        User user = UserMapper.INSTANCE.toUser(userDto);
         if (id != null) {
             userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + user.getId()));
             user.setId(id);
