@@ -1,10 +1,8 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.repositories.UserRepository;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.nnk.springboot.service.IUserDalService;
+import com.nnk.springboot.web.dto.UserDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,66 +10,64 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.Collection;
 
 @Controller
 @RequestMapping("/user/")
 public class UserController {
 
-    private UserRepository userRepository;
+    private IUserDalService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(IUserDalService userService) {
+        this.userService = userService;
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model)
     {
-        model.addAttribute("users", userRepository.findAll());
+        Collection<UserDTO> userList =  userService.findAll();
+        model.addAttribute("users", userList);
         return "user/list";
     }
 
     @GetMapping(value = "add")
-    public String addUser(User user, Model model) {
-        model.addAttribute("user", new User());
+    public String addUser(UserDTO user, Model model) {
+        model.addAttribute("user", new UserDTO());
         return "user/add";
     }
 
     @PostMapping(value = "validate")
-    public String validate(@Valid User user,
+    public String validate(@Valid UserDTO user,
                            BindingResult result,
                            Model model) {
         if (!result.hasErrors()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
-            userRepository.save(user);
-            model.addAttribute("users", userRepository.findAll());
+            userService.create(user);
+            model.addAttribute("users", userService.findAll());
             return "user/list";
         }
+        model.addAttribute("user", user);
         return "user/add";
     }
 
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        UserDTO user = userService.findOne(id);
         user.setPassword("");
         model.addAttribute("user", user);
+        model.addAttribute("id", id);
         return "user/update";
     }
 
     @PostMapping(value = "update/{id}")
     public String updateUser(@PathVariable("id") Integer id,
-                             @Valid User user,
+                             @Valid UserDTO user,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("user", user);
             return "user/update";
         }
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setId(id);
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
+        userService.update(user, id);
+        model.addAttribute("users", userService.findAll());
         return "user/list";
     }
 
@@ -79,11 +75,8 @@ public class UserController {
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        if (user != null){
-            userRepository.delete(user);
-        }
-        model.addAttribute("users", userRepository.findAll());
+        userService.delete(id);
+        model.addAttribute("users", userService.findAll());
         return "user/list";
     }
 }

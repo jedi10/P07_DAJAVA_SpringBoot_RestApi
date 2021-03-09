@@ -16,36 +16,26 @@ import java.util.Objects;
 @Entity
 @Table(name = "curvepoint")
 @NoArgsConstructor
+@Getter
+@Setter
 public class CurvePoint {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Getter
-    @Setter
     private Integer id;
 
     @NotNull(message = "Curve Id is mandatory")
     @Column(name = "curve_id")
-    @Getter
-    @Setter
     private Integer curveId;
 
     @Column(name = "as_of_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime asOfDate;
 
-    @Getter
-    @Setter
     private Double term;
 
-    @Getter
-    @Setter
     private Double value;
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime creationDate;
 
     /**

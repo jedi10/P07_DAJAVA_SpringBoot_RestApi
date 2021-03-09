@@ -17,107 +17,65 @@ import java.util.Objects;
 @Entity
 @Table(name = "bidlist")
 @NoArgsConstructor
+@Getter
+@Setter
 public class BidList {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Getter
-    @Setter
     private Integer id;
 
     @NotBlank(message = "Account is mandatory")
-    @Getter
-    @Setter
     private String account;
 
-    @Getter
-    @Setter
     private String type;
 
     @Column(name = "bid_quantity")
-    @Getter
-    @Setter
     private Double bidQuantity;
 
     @Column(name = "ask_quantity")
-    @Getter
-    @Setter
     private Double askQuantity;
 
-    @Getter
-    @Setter
     private Double bid;
 
-    @Getter
-    @Setter
     private Double ask;
 
-    @Getter
-    @Setter
     private String benchmark;
 
     @Column(name = "bid_list_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime bidListDate;
 
-    @Getter
-    @Setter
     private String commentary;
 
-    @Getter
-    @Setter
     private String security;
 
-    @Getter
-    @Setter
     private String status;
 
-    @Getter
-    @Setter
     private String trader;
 
-    @Getter
-    @Setter
     private String book;
 
     @Column(name= "creation_name")
-    @Getter
-    @Setter
     private String creationName;
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime creationDate;
 
     @Column(name = "revision_name")
-    @Getter
-    @Setter
     private String revisionName;
 
     @Column(name = "revision_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime revisionDate;
 
     @Column(name = "deal_name")
-    @Getter
-    @Setter
     private String dealName;
 
     @Column(name = "deal_type")
-    @Getter
-    @Setter
     private String dealType;
 
     @Column(name = "source_list_id")
-    @Getter
-    @Setter
     private String sourceListId;
 
-    @Getter
-    @Setter
     private String side;
 
     /**

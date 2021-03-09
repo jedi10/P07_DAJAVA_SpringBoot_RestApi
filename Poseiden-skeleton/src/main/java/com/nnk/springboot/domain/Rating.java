@@ -13,33 +13,25 @@ import java.util.Objects;
 @Entity
 @Table(name = "rating")
 @NoArgsConstructor
+@Getter
+@Setter
 public class Rating {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Getter
-    @Setter
     private Integer id;
 
     @Column(name = "moodys_rating")
-    @Getter
-    @Setter
     private String moodysRating;
 
     @Column(name = "sand_p_rating")
-    @Getter
-    @Setter
     private String sandPRating;
 
     @Column(name = "fitch_rating")
-    @Getter
-    @Setter
     private String fitchRating;
 
     @NotNull(message = "orderNumber is mandatory")
     @Column(name = "order_number")
-    @Getter
-    @Setter
     private Integer orderNumber;
 
     /**
