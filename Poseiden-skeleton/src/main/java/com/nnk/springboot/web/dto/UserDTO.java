@@ -19,20 +19,20 @@ public class UserDTO {
 
     private Integer id;
 
-    @NotBlank(message = "Username is mandatory")
-    @Size(min = 2, max = 35, message = "UserName must be between 2 and 35 characters long")
+    @NotBlank(message = "{User.UserName.mandatory}")
+    @Size(min = 2, max = 35, message = "{User.UserName.size}")
     private String username;
 
-    @NotBlank(message = "Password is mandatory")
+    @NotBlank(message = "{User.Password.mandatory}")
     @ValidPassword
     private String password;
 
-    @NotBlank(message = "FullName is mandatory")
-    @Size(min = 2, max = 35, message = "FullName must be between 2 and 35 characters long")
+    @NotBlank(message = "{User.FullName.mandatory}")
+    @Size(min = 2, max = 35, message = "{User.FullName.size}")
     private String fullname;
 
-    @NotBlank(message = "Role is mandatory")
-    @Size(min = 2, max = 35, message = "Role must be between 2 and 35 characters long")
+    @NotBlank(message = "{User.Role.mandatory}")
+    @Size(min = 2, max = 35, message = "{User.Role.size}")
     private String role;
 
     @Override
