@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -24,15 +26,18 @@ public class CurvePoint {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @NotNull(message = "Curve Id is mandatory")
+    @NotNull(message = "{CurvePoint.CurveId.mandatory}")
+    @Min(value = 0, message = "{CurvePoint.CurveId.min}")
     @Column(name = "curve_id")
     private Integer curveId;
 
     @Column(name = "as_of_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime asOfDate;
 
+    @DecimalMin(value= "0", inclusive = false, message = "{CurvePoint.Term.validity}")
     private Double term;
 
+    @DecimalMin(value= "0", inclusive = false, message = "{CurvePoint.Value.validity}")
     private Double value;
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

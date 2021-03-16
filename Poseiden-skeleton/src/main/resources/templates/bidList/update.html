@@ -14,22 +14,37 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/bidList/update/{id}(id=${bid.id})}" th:object="${bid}" method="post" class="form-horizontal" style="width: 100%">
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+				<ol>
+					<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+				</ol>
+			</div>
 			<div class = "form-group row ">
 				<label for = "account" class = "col-sm-2 col-form-label">Account</label>
 				<div class = "col-sm-4">
 					<input th:field="*{account}" id = "account" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "type" class = "col-sm-2 col-form-label">Type</label>
 				<div class = "col-sm-4">
 					<input th:field="*{type}" id = "type" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "bidquantity" class = "col-sm-2 col-form-label">Bid Quantity</label>
 				<div class = "col-sm-4">
-					<input th:field="*{bidQuantity}" id = "bidquantity" type = "text" class = "form-control" placeholder = "Mandatory">
+					<input th:field="*{bidQuantity}" id = "bidquantity" type = "number" step="1" list="defaultNumbers" class = "form-control" placeholder = "Mandatory" required>
+					<datalist id="defaultNumbers">
+						<option value="1">
+						<option value="10">
+						<option value="100">
+						<option value="1000">
+						<option value="10000">
+					</datalist>
+					<p class="text-danger" th:if="${#fields.hasErrors('bidQuantity')}" th:errors="*{bidQuantity}"></p>
 				</div>
 			</div>
 			<div class = "form-group row">

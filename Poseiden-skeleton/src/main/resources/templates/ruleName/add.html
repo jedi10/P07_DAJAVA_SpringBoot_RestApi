@@ -15,41 +15,51 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/ruleName/validate}" th:object="${ruleName}" method="post" class="form-horizontal" style="width: 100%">
-
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+				<ol>
+					<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+				</ol>
+			</div>
 			<div class = "form-group row ">
 				<label for = "name" class = "col-sm-2 col-form-label">Name</label>
 				<div class = "col-sm-4">
 					<input th:field="*{name}" id = "name" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "description" class = "col-sm-2 col-form-label">Description</label>
 				<div class = "col-sm-4">
 					<input th:field="*{description}" id = "description" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "json" class = "col-sm-2 col-form-label">JSON</label>
 				<div class = "col-sm-4">
 					<input th:field="*{json}" id = "json" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('json')}" th:errors="*{json}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "template" class = "col-sm-2 col-form-label">Template</label>
 				<div class = "col-sm-4">
 					<input th:field="*{template}" id = "template" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('template')}" th:errors="*{template}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "sqlstr" class = "col-sm-2 col-form-label">SQL String</label>
 				<div class = "col-sm-4">
 					<input th:field="*{sqlStr}" id = "sqlstr" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('sqlStr')}" th:errors="*{sqlStr}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "sqlpart" class = "col-sm-2 col-form-label">SQL Part</label>
 				<div class = "col-sm-4">
 					<input th:field="*{sqlPart}" id = "sqlpart" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('sqlPart')}" th:errors="*{sqlPart}"></p>
 				</div>
 			</div>
 			<div class = "form-group row">

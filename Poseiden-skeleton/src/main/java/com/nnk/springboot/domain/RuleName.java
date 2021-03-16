@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -20,21 +21,24 @@ public class RuleName {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @NotBlank(message = "name is mandatory")
+    @NotBlank(message = "{RuleName.Name.mandatory}")
+    @Size(min= 1, max = 255, message="{RuleName.Name.size}")
     private String name;
 
+    @Size(min= 1, max = 255, message="{RuleName.Description.size}")
+    private String description;
 
-   private String description;
-
-
+    @Size(min= 1, max = 255, message="{RuleName.Json.size}")
     private String json;
 
-
+    @Size(min= 1, max = 255, message="{RuleName.Template.size}")
     private String template;
 
+    @Size(min= 1, max = 255, message="{RuleName.SqlStr.size}")
     @Column(name = "sql_string")
     private String sqlStr;
 
+    @Size(min= 1, max = 255, message="{RuleName.SqlPart.size}")
     @Column(name = "sql_part")
     private String sqlPart;
 

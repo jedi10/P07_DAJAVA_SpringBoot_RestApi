@@ -6,6 +6,7 @@ import com.nnk.springboot.web.dto.UserDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping(value = "validate")
-    public String validate(@Valid UserDTO user,
+    public String validate(@Valid @ModelAttribute("user") UserDTO user,
                            BindingResult result,
                            Model model) {
         if (!result.hasErrors()) {
@@ -45,7 +46,6 @@ public class UserController {
             model.addAttribute("users", userService.findAll());
             return "user/list";
         }
-        model.addAttribute("user", user);
         return "user/add";
     }
 
@@ -60,10 +60,10 @@ public class UserController {
 
     @PostMapping(value = "update/{id}")
     public String updateUser(@PathVariable("id") Integer id,
-                             @Valid UserDTO user,
-                             BindingResult result, Model model) {
+                             @Valid @ModelAttribute("user") UserDTO user,
+                             BindingResult result,
+                             Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("user", user);
             return "user/update";
         }
         userService.update(user, id);
@@ -81,5 +81,9 @@ public class UserController {
     }
 }
 
+//https://www.baeldung.com/spring-mvc-and-the-modelattribute-annotation
+//https://www.codejava.net/frameworks/spring-boot/spring-boot-form-validation-tutorial
+//https://asbnotebook.com/2020/04/11/spring-boot-thymeleaf-form-validation-example/
+//https://stackabuse.com/spring-boot-thymeleaf-form-data-validation-with-bean-validator/
 
 //https://mkyong.com/spring-boot/spring-rest-spring-security-example/
