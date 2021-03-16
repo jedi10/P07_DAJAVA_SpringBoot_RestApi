@@ -19,6 +19,14 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
     @SneakyThrows
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
+
+        if (password == null) {
+            context.buildConstraintViolationWithTemplate("password can't be null")
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
+            return false;
+        }
+
         //customizing validation messages
         Properties props = new Properties();
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("passay.properties");
