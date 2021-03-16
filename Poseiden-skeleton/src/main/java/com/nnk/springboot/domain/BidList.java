@@ -1,14 +1,13 @@
 package com.nnk.springboot.domain;
 
+import com.nnk.springboot.web.dto.validation.DigitalNumber;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Required;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -30,6 +29,10 @@ public class BidList {
 
     private String type;
 
+    //These validation can only filter String entry
+    //@Pattern(regexp = "[1-9][0-9]*|0" , message = "Entry has to be a numerical number !!")//-?\\d+(\\.\\d+)?
+    //@DigitalNumber(message = "Entry has to be a numerical number !!")
+    @DecimalMin(value= "0", inclusive = false, message = "Quantity have to be above 0")
     @Column(name = "bid_quantity")
     private Double bidQuantity;
 
@@ -114,3 +117,11 @@ public class BidList {
                 '}';
     }
 }
+
+
+//Custom validator https://mkyong.com/spring-boot/spring-rest-validation-example/
+//check number https://www.baeldung.com/java-check-string-number
+//https://asbnotebook.com/2020/04/11/spring-boot-thymeleaf-form-validation-example/
+//https://stackoverflow.com/questions/15488990/validating-double-and-float-values-using-hibernate-validator-bean-validation
+//validating nested object https://nullbeans.com/how-to-use-java-bean-validation-in-spring-boot/
+//custom error response https://www.springboottutorial.com/spring-boot-validation-for-rest-services

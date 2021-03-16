@@ -37,7 +37,7 @@ public class BidListController {
     }
 
     @PostMapping(value = "validate", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE+";charset=UTF-8"})//"application/x-www-form-urlencoded")
-    public String validate(@Valid BidList bid,
+    public String validate(@Valid  @ModelAttribute("bid") BidList bid,
                            BindingResult result,
                            Model model) {
         if (result.hasErrors()) {
@@ -61,7 +61,7 @@ public class BidListController {
 
     @PostMapping(value = "update/{id}")
     public String updateBid(@PathVariable("id") Integer id,
-                            @Valid BidList bidList,
+                            @Valid  @ModelAttribute("bid") BidList bidList,
                             BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "bidList/update";
