@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -22,11 +25,15 @@ public class Trade {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @NotBlank(message = "account is mandatory")
+    @NotBlank(message = "{Trade.Account.mandatory}")
+    @Size(min = 1, max = 255, message = "{Trade.Account.size}")
     private String account;
 
+    @NotBlank(message = "{Trade.Type.mandatory}")
+    @Size(min = 1, max = 255, message = "{Trade.Type.size}")
     private String type;
 
+    @DecimalMin(value= "0", inclusive = false, message = "{Trade.BuyQuantity.validity}")
     @Column(name = "buy_quantity")
     private Double buyQuantity;
 
