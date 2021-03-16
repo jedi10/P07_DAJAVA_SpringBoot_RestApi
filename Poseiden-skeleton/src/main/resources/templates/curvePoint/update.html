@@ -14,23 +14,37 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/curvePoint/update/{id}(id=${curvePoint.id})}" th:object="${curvePoint}" method="post" class="form-horizontal" style="width: 100%">
-
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+				<ol>
+					<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+				</ol>
+			</div>
 			<div class = "form-group row ">
 				<label for = "curveId" class = "col-sm-2 col-form-label">Curve ID</label>
 				<div class = "col-sm-4">
-					<input th:field="*{curveId}" id = "curveId" type = "text" class = "form-control" placeholder = "Mandatory">
+					<input th:field="*{curveId}" id = "curveId" type = "number" step="1" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('curveId')}" th:errors="*{curveId}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "term" class = "col-sm-2 col-form-label">Term</label>
 				<div class = "col-sm-4">
-					<input th:field="*{term}" id = "term" type = "text" class = "form-control" placeholder = "Mandatory">
+					<input th:field="*{term}" id = "term" type = "number" step="1" list="defaultNumbers" class = "form-control" placeholder = "Mandatory" required>
+					<datalist id="defaultNumbers">
+						<option value="10">
+						<option value="20">
+						<option value="30">
+						<option value="40">
+						<option value="50">
+					</datalist>
+					<p class="text-danger" th:if="${#fields.hasErrors('term')}" th:errors="*{term}"></p>
 				</div>
 			</div>
 			<div class = "form-group row ">
 				<label for = "value" class = "col-sm-2 col-form-label">Value</label>
 				<div class = "col-sm-4">
-					<input th:field="*{value}" id = "value" type = "text" class = "form-control" placeholder = "Mandatory">
+					<input th:field="*{value}" id = "value" type = "number" class = "form-control" placeholder = "Mandatory" required>
+					<p class="text-danger" th:if="${#fields.hasErrors('value')}" th:errors="*{value}"></p>
 				</div>
 			</div>
 			<div class = "form-group row">
