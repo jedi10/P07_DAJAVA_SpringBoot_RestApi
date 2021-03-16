@@ -28,6 +28,7 @@ public class BidList {
     @Size(min = 2, max = 255, message = "{BidList.Account.size}")
     private String account;
 
+    @NotBlank(message = "{BidList.Type.mandatory}")
     @Size(max = 255, message = "{BidList.Type.size}")
     private String type;
 
