@@ -44,7 +44,7 @@
 			<div class = "form-group row ">
 				<label for = "ordernumber" class = "col-sm-2 col-form-label">Order Number</label>
 				<div class = "col-sm-4">
-					<input th:field="*{orderNumber}" id = "ordernumber" type = "number" step="1" class = "form-control" placeholder = "Mandatory">
+					<input th:field="*{orderNumber}" id = "ordernumber" type = "number" step="1" class = "form-control" placeholder = "Mandatory" required>
 					<p class="text-danger" th:if="${#fields.hasErrors('orderNumber')}" th:errors="*{orderNumber}"></p>
 				</div>
 			</div>
