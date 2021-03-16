@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -21,16 +23,19 @@ public class Rating {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @Size(min= 1, max = 255, message="{Rating.MoodyRating.validity}")
     @Column(name = "moodys_rating")
     private String moodysRating;
 
+    @Size(min= 1, max = 255, message="{Rating.SandPRating.validity}")
     @Column(name = "sand_p_rating")
     private String sandPRating;
 
+    @Size(min= 1, max = 255, message="{Rating.FitchRating.validity}")
     @Column(name = "fitch_rating")
     private String fitchRating;
 
-    @NotNull(message = "orderNumber is mandatory")
+    @NotNull(message = "{Rating.OrderNumber.mandatory}")
     @Column(name = "order_number")
     private Integer orderNumber;
 
