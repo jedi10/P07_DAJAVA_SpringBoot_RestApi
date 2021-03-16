@@ -26,8 +26,8 @@ public class CurvePoint {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @NotNull(message = "CurvePoint.CurveId.mandatory")
-    @Min(value = 0, message = "CurvePoint.CurveId.min")
+    @NotNull(message = "{CurvePoint.CurveId.mandatory}")
+    @Min(value = 0, message = "{CurvePoint.CurveId.min}")
     @Column(name = "curve_id")
     private Integer curveId;
 
