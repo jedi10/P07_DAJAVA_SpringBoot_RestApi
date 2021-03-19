@@ -4,9 +4,10 @@ import com.nnk.springboot.domain.User;
 import com.nnk.springboot.web.dto.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel="spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper( UserMapper.class);
@@ -18,5 +19,5 @@ public interface UserMapper {
 
 }
 
-
+//https://ibootweb.com/questions/2088112/quand-dois-je-utiliser-mapstruct-ou-des-convertisseurs-avec-java-8-pour-eviter-les-erreurs
 //https://mapstruct.org/documentation/stable/reference/html/#adding-custom-methods

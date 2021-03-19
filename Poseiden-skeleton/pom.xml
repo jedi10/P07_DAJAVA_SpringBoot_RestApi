@@ -23,6 +23,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
+		<org.lombok.version>1.18.18</org.lombok.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>
 
@@ -51,7 +53,9 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<version>${org.lombok.version}</version>
+			<!--<optional>true</optional>-->
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok-mapstruct-binding
 		 Binding for Lombok and Mapstruct, to allow them to cooperate.
@@ -87,13 +91,13 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${org.mapstruct.version}</version>
 		</dependency>
-		<!--https://stackoverflow.com/questions/58843112/is-mapstruct-java11-compatible-->
+		<!--https://stackoverflow.com/questions/58843112/is-mapstruct-java11-compatible
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
 			<version>${org.mapstruct.version}</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 		<!--Library for checking that a password complies with a custom set of rules-->
 		<dependency>
 			<groupId>org.passay</groupId>
@@ -108,7 +112,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
 				<version>3.3.3</version>
@@ -121,7 +125,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<processors>
-								<!-- list of processors to use -->
+								list of processors to use
 								<processor>org.mapstruct.ap.MappingProcessor</processor>
 							</processors>
 							<outputDirectory>${basedir}/target/generated-sources-mappers</outputDirectory>
@@ -129,15 +133,15 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<!--
+			</plugin>-->
+			<!--throw error when app compil and error detected
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.mapstruct</groupId>
@@ -147,7 +151,37 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>-->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.18</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+                        </path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
 </project>
+
+
+<!--https://stackoverflow.com/questions/65622167/maven-mapstruct-issue-when-running-mvn-install-mvn-test-->

@@ -81,6 +81,7 @@ public class UserController {
     }
 }
 
+//unit test with error validation https://mkyong.com/spring-boot/spring-rest-validation-example/
 //https://www.baeldung.com/spring-mvc-and-the-modelattribute-annotation
 //https://www.codejava.net/frameworks/spring-boot/spring-boot-form-validation-tutorial
 //https://asbnotebook.com/2020/04/11/spring-boot-thymeleaf-form-validation-example/
