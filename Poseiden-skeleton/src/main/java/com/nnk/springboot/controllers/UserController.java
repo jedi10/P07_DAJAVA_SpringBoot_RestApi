@@ -3,8 +3,7 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.IUserDalService;
 import com.nnk.springboot.web.dto.UserDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,11 +17,10 @@ import java.util.Collection;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping("/user/")
 public class UserController {
-
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private IUserDalService userService;
 
@@ -35,7 +33,7 @@ public class UserController {
     {
         Collection<UserDTO> userList =  userService.findAll();
         model.addAttribute("users", userList);
-        logger.info("Get User List on URI: '{}' : RESPONSE STATUS: '{}'",
+        log.info("Get User List on URI: '{}' : RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
                 response.getStatus());
         return "user/list";
@@ -45,7 +43,7 @@ public class UserController {
     public String addUser(UserDTO user, Model model,
                           HttpServletRequest request, HttpServletResponse response) {
         model.addAttribute("user", new UserDTO());
-        logger.info("Go to Creation User Form on URI: '{}' : RESPONSE STATUS: '{}'",
+        log.info("Go to Creation User Form on URI: '{}' : RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
                 response.getStatus());
         return "user/add";
@@ -57,7 +55,7 @@ public class UserController {
                            Model model,
                            HttpServletRequest request, HttpServletResponse response) {
         if (result.hasErrors()) {
-            logger.warn("User Creation Error on URI: '{}': Error Field(s): '{}' : RESPONSE STATUS: '{}'",
+            log.warn("User Creation Error on URI: '{}': Error Field(s): '{}' : RESPONSE STATUS: '{}'",
                     request.getRequestURI(),
                     result.getFieldErrors().stream()
                             .map(e-> e.getField().toUpperCase())
@@ -70,7 +68,7 @@ public class UserController {
         StringJoiner joinUserName = new StringJoiner(" ");
         joinUserName.add(userCreated.getId().toString());
         joinUserName.add(userCreated.getFullname());
-        logger.info("User Creation on URI: '{}' : User Created '{}' : RESPONSE STATUS: '{}'",
+        log.info("User Creation on URI: '{}' : User Created '{}' : RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
                 joinUserName,
                 response.getStatus());
@@ -85,7 +83,7 @@ public class UserController {
         user.setPassword("");
         model.addAttribute("user", user);
         model.addAttribute("id", id);
-        logger.info("Go to Update User Form on URI: '{}': RESPONSE STATUS: '{}'",
+        log.info("Go to Update User Form on URI: '{}': RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
                 response.getStatus());
         return "user/update";
@@ -98,7 +96,7 @@ public class UserController {
                              Model model,
                              HttpServletRequest request, HttpServletResponse response) {
         if (result.hasErrors()) {
-            logger.warn("Update User Error on URI: '{}': Error Field(s):'{}' : RESPONSE STATUS: '{}'",
+            log.warn("Update User Error on URI: '{}': Error Field(s):'{}' : RESPONSE STATUS: '{}'",
                     request.getRequestURI(),
                     result.getFieldErrors().stream()
                             .map(e-> e.getField().toUpperCase())
@@ -111,7 +109,7 @@ public class UserController {
         StringJoiner joinUserName = new StringJoiner(" ");
         joinUserName.add(userUpdated.getId().toString());
         joinUserName.add(userUpdated.getFullname());
-        logger.info("Update User on URI: '{}' : User Updated: '{}' : RESPONSE STATUS: '{}'",
+        log.info("Update User on URI: '{}' : User Updated: '{}' : RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
                 joinUserName,
                 response.getStatus());
@@ -126,7 +124,7 @@ public class UserController {
                              HttpServletRequest request, HttpServletResponse response) {
         userService.delete(id);
         model.addAttribute("users", userService.findAll());
-        logger.info("Delete User on URI: '{}' : RESPONSE STATUS: '{}'",
+        log.info("Delete User on URI: '{}' : RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
                 response.getStatus());
         return "user/list";
