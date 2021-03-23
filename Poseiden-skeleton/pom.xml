@@ -178,6 +178,62 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!--Jacoco Report
+			"mvn clean package"
+			https://www.baeldung.com/jacoco-->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<!-- Default: target/site/jacoco
+						https://mkyong.com/maven/maven-jacoco-code-coverage-example/-->
+						<configuration>
+							<outputDirectory>target/jacoco-report</outputDirectory>
+						</configuration>
+					</execution>
+					<!--Jacoco Coverage Check
+					"mvn clean verify"
+					https://dzone.com/articles/reporting-code-coverage-using-maven-and-jacoco-plu-->
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>PACKAGE</element>
+									<excludes>
+										<exclude>com.nnk.springboot.configuration</exclude>
+										<exclude>com.nnk.springboot.tools</exclude>
+										<exclude>com.nnk.springboot.domain</exclude>
+										<exclude>com.nnk.springboot.web.dto.validation</exclude>
+									</excludes>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>60%</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
