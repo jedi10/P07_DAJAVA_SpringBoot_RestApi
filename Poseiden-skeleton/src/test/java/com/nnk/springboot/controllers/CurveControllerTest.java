@@ -316,7 +316,41 @@ class CurveControllerTest {
         verify(curvePointRepository, Mockito.times(1)).save(ArgumentMatchers.refEq(curvePointUpdated));
     }
 
+    @DisplayName("Update - Validate - Error")
     @Order(9)
+    @Test
+    void update_errorCurve() throws Exception {
+        //***********GIVEN*************
+        curvePointCreated.setCurveId(null);
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "update/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+
+        String jsonGiven = convertJavaToJson(curvePointCreated);
+        String stringGiven = curvePointCreated.toString();
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .post( urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("USER", "ADMIN"))
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(jsonGiven);
+        //String urlDestination =  UriUtils.encode("add", "UTF-8");
+
+        //**************WHEN-THEN****************************
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isOk())//.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                //.andExpect(redirectedUrl(rootURL + urlDestination))
+                .andExpect(view().name("curvePoint/update"))
+                .andReturn();
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(curvePointRepository, Mockito.never()).save(curvePointCreated);
+    }
+
+    @Order(10)
     @Test
     void deleteCurve() throws Exception {
         //***********GIVEN*************
