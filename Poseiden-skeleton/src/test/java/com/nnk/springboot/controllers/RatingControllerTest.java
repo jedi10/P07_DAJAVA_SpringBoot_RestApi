@@ -387,7 +387,46 @@ class RatingControllerTest {
         verify(ratingRepository, Mockito.times(1)).deleteById(ratingId);
     }
 
-    @Order(10)
+    @Order(11)
+    @Test
+    void deleteRating_noItemFound() throws Exception {
+        //***********GIVEN*************
+        when(ratingRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
+        int ratingId = 5;
+        ratingUpdated.setId(ratingId);
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "delete/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .get(urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("ADMIN"))
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.TEXT_HTML_VALUE);
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at start***************
+        //***********************************************************
+        verify(ratingRepository, Mockito.never()).findById(ratingId);
+
+        //**************WHEN-THEN****************************
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.TEXT_HTML_VALUE+";charset=UTF-8"))
+                .andExpect(content().string(containsString("Rating List")))
+                .andExpect(view().name("rating/list"))
+                .andExpect(model().attributeExists("ratings"))
+                .andExpect(model().attribute("ratings", ratingListGiven))
+                .andReturn();
+
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(ratingRepository, Mockito.times(1)).findById(ratingId);
+        verify(ratingRepository, Mockito.never()).deleteById(ratingId);
+    }
+
+    @Order(12)
     @Test
     void deleteRating_errorAccess() throws Exception {
         String urlTemplate = String.format("%s%s%s",

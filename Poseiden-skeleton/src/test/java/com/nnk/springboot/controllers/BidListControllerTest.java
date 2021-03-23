@@ -405,7 +405,46 @@ class BidListControllerTest {
         verify(bidListRepository, Mockito.times(1)).deleteById(bidListId);
     }
 
-    @Order(10)
+    @Order(11)
+    @Test
+    void deleteBid_noItemFound() throws Exception {
+        //***********GIVEN*************
+        when(bidListRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
+        int bidListId = 5;
+        bidListUpdated.setId(bidListId);
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "delete/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .get(urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("ADMIN"))
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .accept(MediaType.TEXT_HTML_VALUE);
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at start***************
+        //***********************************************************
+        verify(bidListRepository, Mockito.never()).findById(bidListId);
+
+        //**************WHEN-THEN****************************
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/list"))
+                .andExpect(content().contentType(MediaType.TEXT_HTML_VALUE+";charset=UTF-8"))
+                .andExpect(content().string(containsString("Bid List")))
+                .andExpect(model().attributeExists("bids"))
+                .andExpect(model().attribute("bids", bidListGiven))
+                .andReturn();
+
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(bidListRepository, Mockito.times(1)).findById(bidListId);
+        verify(bidListRepository, Mockito.never()).deleteById(bidListId);
+    }
+
+    @Order(12)
     @Test
     void deleteBidList_errorAccess() throws Exception {
         String urlTemplate = String.format("%s%s%s",
