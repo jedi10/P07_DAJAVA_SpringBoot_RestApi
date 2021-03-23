@@ -212,12 +212,10 @@ class BidListControllerTest {
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
-                .andExpect(status().isUnsupportedMediaType())//415//.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(status().isOk())//.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 //.andExpect(redirectedUrl(rootURL + urlDestination))
-                //.andExpect(view().name("bidList/add"))
+                .andExpect(view().name("bidList/add"))
                 .andReturn();
-
-        assertNull(mvcResult.getResponse().getContentType());
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
@@ -336,7 +334,40 @@ class BidListControllerTest {
         verify(bidListRepository, Mockito.times(1)).save(ArgumentMatchers.refEq(bidListUpdated));
     }
 
+    @DisplayName("Update - Validate - Error")
     @Order(9)
+    @Test
+    void update_validateErrorBid() throws Exception {
+        //***********GIVEN*************
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "update/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+        bidListCreated.setAccount(null);
+        String jsonGiven = convertJavaToJson(bidListCreated);
+        String stringGiven = bidListCreated.toString();
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .post(urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("USER", "ADMIN"))
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(jsonGiven);
+        //String urlDestination =  UriUtils.encode("add", "UTF-8");
+
+        //**************WHEN-THEN****************************
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isOk())//.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                //.andExpect(redirectedUrl(rootURL + urlDestination))
+                .andExpect(view().name("bidList/update"))
+                .andReturn();
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(bidListRepository, Mockito.never()).save(bidListCreated);
+    }
+
+    @Order(10)
     @Test
     void deleteBid() throws Exception {
         //***********GIVEN*************
