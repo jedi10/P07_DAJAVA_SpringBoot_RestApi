@@ -318,7 +318,38 @@ class RatingControllerTest {
         verify(ratingRepository, Mockito.times(1)).save(ArgumentMatchers.refEq(ratingUpdated));
     }
 
+    @DisplayName("Update - Validate - Error")
     @Order(9)
+    @Test
+    void update_errorRating() throws Exception {
+        //***********GIVEN*************
+        ratingCreated.setOrderNumber(null);
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "update/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+        String jsonGiven = convertJavaToJson(ratingCreated);
+        String stringGiven = ratingCreated.toString();
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .post(urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("USER", "ADMIN"))
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(jsonGiven);
+
+        //**************WHEN-THEN****************************
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isOk())//.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(view().name("rating/update"))
+                .andReturn();
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(ratingRepository, Mockito.never()).save(ratingCreated);
+    }
+
+    @Order(10)
     @Test
     void deleteRating() throws Exception {
         //***********GIVEN*************
