@@ -192,7 +192,6 @@ class BidListControllerTest {
         verify(bidListRepository, Mockito.times(1)).save(ArgumentMatchers.refEq(bidListCreated));
     }
 
-    @Disabled
     @DisplayName("Add - Validate - Error")
     @Order(5)
     @Test
@@ -213,10 +212,12 @@ class BidListControllerTest {
 
         //**************WHEN-THEN****************************
         MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
-                .andExpect(status().isOk())//.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(status().isUnsupportedMediaType())//415//.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 //.andExpect(redirectedUrl(rootURL + urlDestination))
-                .andExpect(view().name("bidList/add"))
+                //.andExpect(view().name("bidList/add"))
                 .andReturn();
+
+        assertNull(mvcResult.getResponse().getContentType());
         //***********************************************************
         //**************CHECK MOCK INVOCATION at end***************
         //***********************************************************
