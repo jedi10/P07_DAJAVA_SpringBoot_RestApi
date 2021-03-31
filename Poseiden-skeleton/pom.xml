@@ -187,9 +187,14 @@
 				<version>0.8.5</version>
 				<executions>
 					<execution>
+						<id>before-unit-test-execution</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<configuration>
+							<destFile>target/jacoco-output/jacoco-unit-tests.exec</destFile>
+							<propertyName>surefire.jacoco.args</propertyName>
+						</configuration>
 					</execution>
 					<execution>
 						<id>jacoco-report</id>
@@ -200,7 +205,60 @@
 						<!-- Default: target/site/jacoco
 						https://mkyong.com/maven/maven-jacoco-code-coverage-example/-->
 						<configuration>
+							<dataFile>target/jacoco-output/jacoco-unit-tests.exec</dataFile>
 							<outputDirectory>target/jacoco-report</outputDirectory>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>before-integration-test-execution</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>target/jacoco-output/jacoco-integration-tests.exec</destFile>
+							<propertyName>failsafe.jacoco.args</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>after-integration-test-execution</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>target/jacoco-output/jacoco-integration-tests.exec</dataFile>
+							<outputDirectory>target/jacoco-integration-test-coverage-report</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>merge-unit-and-integration</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>merge</goal>
+						</goals>
+						<configuration>
+							<fileSets>
+								<fileSet>
+									<directory>target/jacoco-output</directory>
+									<includes>
+										<include>*.exec</include>
+									</includes>
+								</fileSet>
+							</fileSets>
+							<destFile>target/jacoco-output/merged.exec</destFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create-merged-report</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>target/jacoco-output/merged.exec</dataFile>
+							<outputDirectory>target/jacoco-merged-test-coverage-report</outputDirectory>
 						</configuration>
 					</execution>
 					<!--Jacoco Coverage Check
@@ -216,10 +274,10 @@
 								<rule>
 									<element>PACKAGE</element>
 									<excludes>
+										<exclude>com.nnk.springboot</exclude>
 										<exclude>com.nnk.springboot.configuration</exclude>
 										<exclude>com.nnk.springboot.tools</exclude>
 										<exclude>com.nnk.springboot.domain</exclude>
-										<exclude>com.nnk.springboot.web.dto.validation</exclude>
 									</excludes>
 									<limits>
 										<limit>
@@ -230,7 +288,34 @@
 									</limits>
 								</rule>
 							</rules>
+							<dataFile>target/jacoco-output/merged.exec</dataFile>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<!--mvn clean test-->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<argLine>${surefire.jacoco.args}</argLine>
+				</configuration>
+			</plugin>
+			<!--It Test Execution: mvn verify-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<argLine>${failsafe.jacoco.args}</argLine>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -241,3 +326,5 @@
 
 
 <!--https://stackoverflow.com/questions/65622167/maven-mapstruct-issue-when-running-mvn-install-mvn-test-->
+
+<!--https://natritmeyer.com/howto/reporting-aggregated-unit-and-integration-test-coverage-with-jacoco/-->
