@@ -278,12 +278,13 @@
 										<exclude>com.nnk.springboot.configuration</exclude>
 										<exclude>com.nnk.springboot.tools</exclude>
 										<exclude>com.nnk.springboot.domain</exclude>
+										<exclude>com.nnk.springboot.web.dto.validation</exclude>
 									</excludes>
 									<limits>
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>60%</minimum>
+											<minimum>77%</minimum>
 										</limit>
 									</limits>
 								</rule>
