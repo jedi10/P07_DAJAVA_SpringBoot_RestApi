@@ -48,7 +48,7 @@ public class BidListController {
         return "bidList/add";
     }
 
-    @PostMapping(value = "validate", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE+";charset=UTF-8"})//"application/x-www-form-urlencoded")
+    @PostMapping(value = "validate") // consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE+";charset=UTF-8"})//"application/x-www-form-urlencoded")
     public String validate(@Valid  @ModelAttribute("bid") BidList bid,
                            BindingResult result,
                            Model model,

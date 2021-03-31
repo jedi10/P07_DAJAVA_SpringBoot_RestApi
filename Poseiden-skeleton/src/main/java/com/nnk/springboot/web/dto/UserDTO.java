@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -52,7 +51,7 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "UserRegistrationDto{" +
+        return "UserDto{" +
                 "username='" + username + '\'' +
                 ", fullname='" + fullname + '\'' +
                 ", role='" + role + '\'' +

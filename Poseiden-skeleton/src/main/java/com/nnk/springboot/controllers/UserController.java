@@ -65,12 +65,9 @@ public class UserController {
             return "user/add";
         }
         User userCreated = userService.create(user);
-        StringJoiner joinUserName = new StringJoiner(" ");
-        joinUserName.add(userCreated.getId().toString());
-        joinUserName.add(userCreated.getFullname());
         log.info("User Creation on URI: '{}' : User Created '{}' : RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
-                joinUserName,
+                userCreated.getId().toString() + " " + userCreated.getFullname(),
                 response.getStatus());
         model.addAttribute("users", userService.findAll());
         return "user/list";
@@ -106,12 +103,9 @@ public class UserController {
             return "user/update";
         }
         User userUpdated = userService.update(user, id);
-        StringJoiner joinUserName = new StringJoiner(" ");
-        joinUserName.add(userUpdated.getId().toString());
-        joinUserName.add(userUpdated.getFullname());
         log.info("Update User on URI: '{}' : User Updated: '{}' : RESPONSE STATUS: '{}'",
                 request.getRequestURI(),
-                joinUserName,
+                userUpdated.getId().toString() + " " + userUpdated.getFullname(),
                 response.getStatus());
         model.addAttribute("users", userService.findAll());
         return "user/list";

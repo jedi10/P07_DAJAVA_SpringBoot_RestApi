@@ -330,7 +330,41 @@ class UserControllerTest {
         verify(userService, Mockito.times(1)).findAll();
     }
 
+    @DisplayName("Update - Validate - Error")
     @Order(9)
+    @Test
+    void update_error() throws Exception {
+        //***********GIVEN*************
+        userCreatedDto.setUsername(null);
+        String urlTemplate = String.format("%s%s%s",
+                rootURL,
+                "update/",
+                UriUtils.encode("5", StandardCharsets.UTF_8));
+        String jsonGiven = convertJavaToJson(userCreatedDto);
+        //String stringGiven = userCreatedDto.toString();
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .post(urlTemplate)
+                .with(SecurityMockMvcRequestPostProcessors.user("duke").roles("USER", "ADMIN"))
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(jsonGiven);
+        //String urlDestination =  UriUtils.encode("add", "UTF-8");
+
+        //**************WHEN-THEN****************************
+        MvcResult mvcResult =  mockMvc.perform(builder)//.andDo(print());
+                .andExpect(status().isOk())//.andExpect(MockMvcResultMatchers.status().isBadRequest())
+                //.andExpect(redirectedUrl(rootURL + urlDestination))
+                .andExpect(view().name("user/update"))
+                .andReturn();
+        //***********************************************************
+        //**************CHECK MOCK INVOCATION at end***************
+        //***********************************************************
+        verify(userService, Mockito.never()).create(userCreatedDto);
+        verify(userService, Mockito.never()).findAll();
+    }
+
+    @Order(10)
     @Test
     void deleteUser() throws Exception {
         //***********GIVEN*************
@@ -368,7 +402,7 @@ class UserControllerTest {
         verify(userService, Mockito.times(1)).delete(userUpdated.getId());
     }
 
-    @Order(10)
+    @Order(11)
     @Test
     void deleteUser_errorAccess() throws Exception {
         String urlTemplate = String.format("%s%s%s",
