@@ -2,6 +2,9 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,8 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+@Api(tags = {"BidList Controller"})
+@Tag(name = "BidList Controller", description = "Private Resources")
 @Slf4j
 @Controller
 @RequestMapping("/bidList/")
@@ -28,6 +33,7 @@ public class BidListController {
         this.bidListRepository = bidListRepository;
     }
 
+    @ApiOperation(value = "Get List of Bid")
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model, HttpServletRequest request, HttpServletResponse response)
     {
@@ -38,6 +44,7 @@ public class BidListController {
         return "bidList/list";
     }
 
+    @ApiOperation(value = "Go to Creation Bid Form")
     @GetMapping(value = "add")
     public String addBidForm(BidList bid, Model model,
             HttpServletRequest request, HttpServletResponse response) {
@@ -48,6 +55,7 @@ public class BidListController {
         return "bidList/add";
     }
 
+    @ApiOperation(value = "Bid Creation Validation")
     @PostMapping(value = "validate") // consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE+";charset=UTF-8"})//"application/x-www-form-urlencoded")
     public String validate(@Valid  @ModelAttribute("bid") BidList bid,
                            BindingResult result,
@@ -72,6 +80,7 @@ public class BidListController {
         return "bidList/list";
     }
 
+    @ApiOperation(value = "Go to Update Bid Form")
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id,
                                  Model model,
@@ -87,6 +96,7 @@ public class BidListController {
         return "bidList/update";
     }
 
+    @ApiOperation(value = "Bid Update Validation")
     @PostMapping(value = "update/{id}")
     public String updateBid(@PathVariable("id") Integer id,
                             @Valid  @ModelAttribute("bid") BidList bidList,
@@ -112,6 +122,7 @@ public class BidListController {
         return "bidList/list";
     }
 
+    @ApiOperation(value = "Delete Bid")
     @RolesAllowed("ADMIN")
     @GetMapping(value = "delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model,

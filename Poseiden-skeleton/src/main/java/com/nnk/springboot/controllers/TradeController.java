@@ -2,6 +2,9 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +17,8 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Api(tags = {"Trade Controller"})
+@Tag(name = "Trade Controller", description = "Private Resources")
 @Slf4j
 @Controller
 @RequestMapping("/trade/")
@@ -27,6 +32,7 @@ public class TradeController {
         this.tradeRepository = tradeRepository;
     }
 
+    @ApiOperation(value = "Get List of Trade")
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model, HttpServletRequest request, HttpServletResponse response)
     {
@@ -38,6 +44,7 @@ public class TradeController {
         return "trade/list";
     }
 
+    @ApiOperation(value = "Go to Creation Trade Form")
     @GetMapping(value = "add")
     public String addUser(Trade bid, Model model,
                           HttpServletRequest request, HttpServletResponse response)
@@ -50,6 +57,7 @@ public class TradeController {
         return "trade/add";
     }
 
+    @ApiOperation(value = "Trade Creation Validation")
     @PostMapping(value = "validate")
     public String validate(@Valid @ModelAttribute("trade") Trade trade,
                            BindingResult result,
@@ -77,6 +85,7 @@ public class TradeController {
         return "trade/list";
     }
 
+    @ApiOperation(value = "Go to Update Trade Form")
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id,
                                  Model model,
@@ -93,6 +102,7 @@ public class TradeController {
         return "trade/update";
     }
 
+    @ApiOperation(value = "Trade Update Validation")
     @PostMapping(value = "update/{id}")
     public String updateTrade(@PathVariable("id") Integer id,
                               @Valid @ModelAttribute("trade") Trade trade,
@@ -121,6 +131,7 @@ public class TradeController {
         return "trade/list";
     }
 
+    @ApiOperation(value = "Delete Trade")
     @GetMapping(value = "delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model,
                               HttpServletRequest request, HttpServletResponse response) {
