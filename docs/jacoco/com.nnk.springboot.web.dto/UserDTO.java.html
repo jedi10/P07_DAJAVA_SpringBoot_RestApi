@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-poseidon</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.web.dto</a> &gt; <span class="el_source">UserDTO.java</span></div><h1>UserDTO.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.web.dto;
+
+import com.nnk.springboot.web.dto.validation.ValidPassword;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.Objects;
+
+<span class="fc" id="L13">@NoArgsConstructor</span>
+<span class="fc" id="L14">@AllArgsConstructor</span>
+<span class="fc" id="L15">@Setter</span>
+@Getter
+public class UserDTO {
+
+<span class="fc" id="L19">    private Integer id;</span>
+
+    @NotBlank(message = &quot;{User.UserName.mandatory}&quot;)
+    @Size(min = 2, max = 35, message = &quot;{User.UserName.size}&quot;)
+<span class="fc" id="L23">    private String username;</span>
+
+    @NotBlank(message = &quot;{User.Password.mandatory}&quot;)
+    @ValidPassword
+<span class="fc" id="L27">    private String password;</span>
+
+    @NotBlank(message = &quot;{User.FullName.mandatory}&quot;)
+    @Size(min = 2, max = 35, message = &quot;{User.FullName.size}&quot;)
+<span class="fc" id="L31">    private String fullname;</span>
+
+    @NotBlank(message = &quot;{User.Role.mandatory}&quot;)
+    @Size(min = 2, max = 35, message = &quot;{User.Role.size}&quot;)
+<span class="fc" id="L35">    private String role;</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if (!(o instanceof UserDTO)) return false;</span>
+<span class="fc" id="L41">        UserDTO that = (UserDTO) o;</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        return Objects.equals(username, that.username) &amp;&amp;</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">                Objects.equals(fullname, that.fullname) &amp;&amp;</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">                Objects.equals(role, that.role);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L49">        return Objects.hash(username, fullname, role);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L54">        return &quot;UserDto{&quot; +</span>
+                &quot;username='&quot; + username + '\'' +
+                &quot;, fullname='&quot; + fullname + '\'' +
+                &quot;, role='&quot; + role + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

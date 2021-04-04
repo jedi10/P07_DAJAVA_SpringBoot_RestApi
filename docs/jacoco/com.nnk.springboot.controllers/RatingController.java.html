@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RatingController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-poseidon</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">RatingController.java</span></div><h1>RatingController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
+
+import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.repositories.RatingRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+<span class="fc" id="L18">@Slf4j</span>
+@Controller
+@RequestMapping(&quot;/rating/&quot;)
+public class RatingController {
+
+    private RatingRepository ratingRepository;
+
+<span class="fc" id="L25">    private String dataName = &quot;Rating&quot;;</span>
+
+<span class="fc" id="L27">    public RatingController(RatingRepository ratingRepository) {</span>
+<span class="fc" id="L28">        this.ratingRepository = ratingRepository;</span>
+<span class="fc" id="L29">    }</span>
+
+    @RequestMapping(value = &quot;list&quot;, method = RequestMethod.GET)
+    public String home(Model model, HttpServletRequest request, HttpServletResponse response)
+    {
+<span class="fc" id="L34">        log.info(&quot;Get {} List on URI: '{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                dataName,
+<span class="fc" id="L36">                request.getRequestURI(),</span>
+<span class="fc" id="L37">                response.getStatus());</span>
+<span class="fc" id="L38">        model.addAttribute(&quot;ratings&quot;, ratingRepository.findAll());</span>
+<span class="fc" id="L39">        return &quot;rating/list&quot;;</span>
+    }
+
+    @GetMapping(value = &quot;add&quot;)
+    public String addRatingForm(Rating rating, Model model,
+                                HttpServletRequest request, HttpServletResponse response)
+    {
+<span class="fc" id="L46">        log.info(&quot;Go to {} Creation Form on URI: '{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                dataName,
+<span class="fc" id="L48">                request.getRequestURI(),</span>
+<span class="fc" id="L49">                response.getStatus());</span>
+<span class="fc" id="L50">        model.addAttribute(&quot;rating&quot;, new Rating());</span>
+<span class="fc" id="L51">        return &quot;rating/add&quot;;</span>
+    }
+
+    @PostMapping(value = &quot;validate&quot;)
+    public String validate(@Valid @ModelAttribute(&quot;rating&quot;) Rating rating,
+                           BindingResult result,
+                           Model model,
+                           HttpServletRequest request, HttpServletResponse response) {
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if(result.hasErrors()){</span>
+<span class="fc" id="L60">            log.warn(&quot;{} Creation Error on URI: '{}': Error Field(s): '{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                    dataName,
+<span class="fc" id="L62">                    request.getRequestURI(),</span>
+<span class="fc" id="L63">                    result.getFieldErrors().stream()</span>
+<span class="fc" id="L64">                            .map(e-&gt; e.getField().toUpperCase())</span>
+<span class="fc" id="L65">                            .distinct()</span>
+<span class="fc" id="L66">                            .collect(Collectors.joining(&quot;, &quot;)),</span>
+<span class="fc" id="L67">                    response.getStatus());</span>
+<span class="fc" id="L68">            return &quot;rating/add&quot;;</span>
+        }
+<span class="nc" id="L70">        Rating ratingCreated = ratingRepository.save(rating);</span>
+<span class="nc" id="L71">        log.info(&quot;{} Creation on URI: '{}' : {} Created '{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                dataName,
+<span class="nc" id="L73">                request.getRequestURI(),</span>
+                dataName,
+<span class="nc" id="L75">                ratingCreated.getId() + &quot; &quot; + ratingCreated.getFitchRating(),</span>
+<span class="nc" id="L76">                response.getStatus());</span>
+<span class="nc" id="L77">        model.addAttribute(&quot;ratings&quot;, ratingRepository.findAll());</span>
+<span class="nc" id="L78">        return &quot;rating/list&quot;;</span>
+    }
+
+    @GetMapping(value= &quot;update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id,
+                                 Model model,
+                                 HttpServletRequest request, HttpServletResponse response) {
+<span class="fc" id="L85">        String errorMessage = &quot;Invalid rating Id: there is no rating with Id: &quot;;</span>
+<span class="fc" id="L86">        Rating rating = ratingRepository.findById(id).orElseThrow(</span>
+<span class="fc" id="L87">                () -&gt; new IllegalArgumentException(errorMessage + id));</span>
+<span class="fc" id="L88">        log.info(&quot;Go to {} Update Form on URI: '{}': RESPONSE STATUS: '{}'&quot;,</span>
+                dataName,
+<span class="fc" id="L90">                request.getRequestURI(),</span>
+<span class="fc" id="L91">                response.getStatus());</span>
+<span class="fc" id="L92">        model.addAttribute(&quot;rating&quot;, rating);</span>
+<span class="fc" id="L93">        return &quot;rating/update&quot;;</span>
+    }
+
+    @PostMapping(value = &quot;update/{id}&quot;)
+    public String updateRating(@PathVariable(&quot;id&quot;) Integer id,
+                               @Valid @ModelAttribute(&quot;rating&quot;) Rating rating,
+                               BindingResult result,
+                               Model model,
+                               HttpServletRequest request, HttpServletResponse response) {
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if(result.hasErrors()){</span>
+<span class="fc" id="L103">            log.warn(&quot;{} Update Error on URI: '{}': Error Field(s):'{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                    dataName,
+<span class="fc" id="L105">                    request.getRequestURI(),</span>
+<span class="fc" id="L106">                    result.getFieldErrors().stream()</span>
+<span class="fc" id="L107">                            .map(e-&gt; e.getField().toUpperCase())</span>
+<span class="fc" id="L108">                            .distinct()</span>
+<span class="fc" id="L109">                            .collect(Collectors.joining(&quot;, &quot;)),</span>
+<span class="fc" id="L110">                    response.getStatus());</span>
+<span class="fc" id="L111">            return &quot;rating/update&quot;;</span>
+        }
+<span class="nc" id="L113">        rating.setId(id);</span>
+<span class="nc" id="L114">        Rating ratingUpdated = ratingRepository.save(rating);</span>
+<span class="nc" id="L115">        log.info(&quot;{} Update on URI: '{}' : {} Updated '{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                dataName,
+<span class="nc" id="L117">                request.getRequestURI(),</span>
+                dataName,
+<span class="nc" id="L119">                ratingUpdated.getId() + &quot; &quot; + ratingUpdated.getFitchRating(),</span>
+<span class="nc" id="L120">                response.getStatus());</span>
+<span class="nc" id="L121">        model.addAttribute(&quot;ratings&quot;, ratingRepository.findAll());</span>
+<span class="nc" id="L122">        return &quot;rating/list&quot;;</span>
+    }
+
+    @RolesAllowed(&quot;ADMIN&quot;)
+    @GetMapping(value =&quot;delete/{id}&quot;)
+    public String deleteRating(@PathVariable(&quot;id&quot;) Integer id, Model model,
+                               HttpServletRequest request, HttpServletResponse response) {
+<span class="fc" id="L129">        Optional&lt;Rating&gt; rating = ratingRepository.findById(id);</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if(rating.isPresent()){</span>
+<span class="fc" id="L131">            ratingRepository.deleteById(id);</span>
+<span class="fc" id="L132">            log.info(&quot;Delete {} on URI: '{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                    dataName,
+<span class="fc" id="L134">                    request.getRequestURI(),</span>
+<span class="fc" id="L135">                    response.getStatus());</span>
+        } else {
+<span class="fc" id="L137">            log.warn(&quot;No {} was deleted on URI: '{}' : RESPONSE STATUS: '{}'&quot;,</span>
+                    dataName,
+<span class="fc" id="L139">                    request.getRequestURI(),</span>
+<span class="fc" id="L140">                    response.getStatus());</span>
+        }
+<span class="fc" id="L142">        model.addAttribute(&quot;ratings&quot;, ratingRepository.findAll());</span>
+<span class="fc" id="L143">        return &quot;rating/list&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

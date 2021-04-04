@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-poseidon</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.config</a> &gt; <span class="el_source">SecurityConfiguration.java</span></div><h1>SecurityConfiguration.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.config;
+
+import com.nnk.springboot.repositories.UserRepository;
+
+import com.nnk.springboot.service.IUserDalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+@Configuration
+@EnableWebSecurity
+<span class="fc" id="L23">public class SecurityConfiguration extends WebSecurityConfigurerAdapter {</span>
+
+    @Autowired
+    private IUserDalService userService;
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+<span class="fc" id="L30">        return new BCryptPasswordEncoder();</span>
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+<span class="fc" id="L35">        http</span>
+<span class="fc" id="L36">                .authorizeRequests()</span>
+<span class="fc" id="L37">                    .antMatchers(</span>
+                                &quot;/login**&quot;,
+                                            &quot;/&quot;,
+                                            &quot;/home&quot;,
+                                            &quot;/user/**&quot;,
+                                            &quot;/js/**&quot;,
+                                            &quot;/css/**&quot;,
+<span class="fc" id="L44">                                            &quot;/img/**&quot;).permitAll()</span>
+<span class="fc" id="L45">                    .anyRequest().authenticated()</span>
+<span class="fc" id="L46">                    .and()</span>
+<span class="fc" id="L47">                .formLogin()</span>
+<span class="fc" id="L48">                    .loginPage(&quot;/login&quot;)</span>
+<span class="fc" id="L49">                    .permitAll()</span>
+<span class="fc" id="L50">                    .and()</span>
+<span class="fc" id="L51">                .logout()</span>
+<span class="fc" id="L52">                    .invalidateHttpSession(true)</span>
+<span class="fc" id="L53">                    .clearAuthentication(true)</span>
+<span class="fc" id="L54">                    .logoutRequestMatcher(new AntPathRequestMatcher(&quot;/app-logout&quot;))</span>
+<span class="fc" id="L55">                    .logoutSuccessUrl(&quot;/login?logout&quot;)</span>
+<span class="fc" id="L56">                    .permitAll();</span>
+<span class="fc" id="L57">    }</span>
+
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+<span class="fc" id="L62">        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();</span>
+<span class="fc" id="L63">        auth.setUserDetailsService(userService);</span>
+<span class="fc" id="L64">        auth.setPasswordEncoder(passwordEncoder());</span>
+<span class="fc" id="L65">        return auth;</span>
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+<span class="fc" id="L70">        auth.authenticationProvider(authenticationProvider());</span>
+<span class="fc" id="L71">    }</span>
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        UserDetails user =
+<span class="fc" id="L77">                User.withDefaultPasswordEncoder()</span>
+<span class="fc" id="L78">                        .username(&quot;user2&quot;)</span>
+<span class="fc" id="L79">                        .password(&quot;password&quot;)</span>
+<span class="fc" id="L80">                        .roles(&quot;USER&quot;)</span>
+<span class="fc" id="L81">                        .build();</span>
+
+<span class="fc" id="L83">        return new InMemoryUserDetailsManager(user);</span>
+    }
+}
+
+//https://spring.io/guides/gs/securing-web/
+
+//https://www.javaguides.net/2020/06/spring-security-tutorial-with-spring-boot-spring-data-jpa-thymeleaf-and-mysql-database.html
+
+//https://www.baeldung.com/spring-security-disable-profile
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
