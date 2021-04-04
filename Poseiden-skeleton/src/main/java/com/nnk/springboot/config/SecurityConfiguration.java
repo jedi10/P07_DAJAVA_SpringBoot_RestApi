@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -46,7 +47,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                             "/user/validate",
                                             "/js/**",
                                             "/css/**",
-                                            "/img/**").permitAll()
+                                            "/img/**",
+                                            // -- swagger ui
+                                            "/v2/api-docs",
+                                            "/v3/api-docs",
+                                            "/configuration/ui",
+                                            "/swagger-resources/**",
+                                            "/configuration/security",
+                                            "/swagger-ui.html",
+                                            "/webjars/**")
+                                            .permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -94,3 +104,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //https://www.javaguides.net/2020/06/spring-security-tutorial-with-spring-boot-spring-data-jpa-thymeleaf-and-mysql-database.html
 
 //https://www.baeldung.com/spring-security-disable-profile
+
+//Swagger with spring security
+// https://stackoverflow.com/questions/37671125/how-to-configure-spring-security-to-allow-swagger-url-to-be-accessed-without-aut
