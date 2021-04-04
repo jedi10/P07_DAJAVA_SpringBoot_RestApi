@@ -4,6 +4,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
+/**
+ * <b>Digital Number Validator</b>
+ */
 public class DigitalNumberValidator implements ConstraintValidator<DigitalNumber, String> {
 
     private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
