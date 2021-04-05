@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Jackson.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-poseidon</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.tools</a> &gt; <span class="el_source">Jackson.java</span></div><h1>Jackson.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.tools;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.SignStyle;
+
+import static java.time.temporal.ChronoField.*;
+
+/**
+ * &lt;b&gt;Tools based on Jackson API&lt;/b&gt;
+ * @author Jedy10
+ */
+<span class="nc" id="L19">public class Jackson {</span>
+
+<span class="fc" id="L21">    private static ObjectMapper mapper = new ObjectMapper()</span>
+<span class="fc" id="L22">            .registerModule(new SimpleModule().addSerializer(</span>
+                    new LocalDateSerializer(new DateTimeFormatterBuilder()
+<span class="fc" id="L24">                            .appendValue(MONTH_OF_YEAR, 2)</span>
+<span class="fc" id="L25">                            .appendLiteral('-')</span>
+<span class="fc" id="L26">                            .appendValue(DAY_OF_MONTH, 2)</span>
+<span class="fc" id="L27">                            .appendLiteral('-')</span>
+<span class="fc" id="L28">                            .appendValue(YEAR, 4, 10, SignStyle.EXCEEDS_PAD)</span>
+<span class="fc" id="L29">                            .toFormatter())))</span>
+<span class="fc" id="L30">            .registerModule(new SimpleModule().addDeserializer(LocalDate.class,</span>
+                    new LocalDateDeserializer(new DateTimeFormatterBuilder()
+<span class="fc" id="L32">                            .appendValue(MONTH_OF_YEAR, 2)</span>
+<span class="fc" id="L33">                            .appendLiteral('-')</span>
+<span class="fc" id="L34">                            .appendValue(DAY_OF_MONTH, 2)</span>
+<span class="fc" id="L35">                            .appendLiteral('-')</span>
+<span class="fc" id="L36">                            .appendValue(YEAR, 4, 10, SignStyle.EXCEEDS_PAD)</span>
+<span class="fc" id="L37">                            .toFormatter())));</span>
+    //.configure(JsonWriteFeature.ESCAPE_NON_ASCII.mappedFeature(), true);
+    //https://stackoverflow.com/questions/23121765/write-objectnode-to-json-string-with-utf-8-characters-to-escaped-ascii
+
+
+    /**
+     * &lt;b&gt;Convert java Object to Json&lt;/b&gt;
+     * @param javaObject java Object
+     * @return JSON string
+     */
+    public static String convertJavaToJson(Object javaObject){
+<span class="fc" id="L48">        String expectedJson = null;</span>
+        try {
+<span class="fc" id="L50">            expectedJson = mapper.writeValueAsString(javaObject);</span>
+            //System.out.println(&quot;ResultingJSONstring = &quot; + expectedJson);
+            //System.out.println(json);
+            //https://blog.codota.com/how-to-convert-a-java-object-into-a-json-string/
+<span class="nc" id="L54">        } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L55">            e.printStackTrace();</span>
+<span class="fc" id="L56">        }</span>
+<span class="fc" id="L57">        return expectedJson;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

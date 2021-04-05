@@ -14,7 +14,12 @@
 	</div>
 
 	<div class="row">
-		<form action="#" th:action="@{/user/update/{id}(id=${user.id})}" th:object="${user}" method="post" class="form-horizontal" style="width: 100%">
+		<form action="#" th:action="@{/user/update/{id}(id=${id})}" th:object="${user}" method="post" class="form-horizontal" style="width: 100%">
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+				<ol>
+					<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+				</ol>
+			</div>
 			<div class="form-group">
 				<label for="fullname" class="col-sm-2 control-label">Full Name</label>
 				<div class="col-sm-10">
@@ -34,6 +39,7 @@
 				<div class="col-sm-10">
 					<input type="password" th:field="*{password}" id="password" placeholder="Password" class="col-4">
 					<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+					<label><em><small>Password policy: One uppercase | One lowercase | One special character | One digit (no blank space/at least 8 characters).</small></em></label>
 				</div>
 			</div>
 			<div class="form-group">
@@ -47,7 +53,7 @@
 
 			<div class="form-group">
 				<div class="col-sm-12">
-					<input type="hidden" th:field="*{id}">
+					<input type="hidden" th:object="${id}">
 					<a class="btn btn-danger btn-sm" href="/user/list">Cancel</a>
 					<input class="btn btn-primary btn-sm" type="submit" value="Update User">
 				</div>

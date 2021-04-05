@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDalServiceBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-poseidon</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.service</a> &gt; <span class="el_source">UserDalServiceBean.java</span></div><h1>UserDalServiceBean.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.service;
+
+import com.nnk.springboot.domain.User;
+import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.web.dto.UserDTO;
+import com.nnk.springboot.web.dto.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class UserDalServiceBean implements IUserDalService {
+
+    private UserRepository userRepository;
+
+    private BCryptPasswordEncoder passwordEncoder;
+
+    public UserDalServiceBean(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
+<span class="fc" id="L27">        super();</span>
+<span class="fc" id="L28">        this.userRepository = userRepository;</span>
+<span class="fc" id="L29">        this.passwordEncoder = bCryptPasswordEncoder;</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * &lt;b&gt;Spring Security Method for user registration&lt;/b&gt;
+     * @param user user Data Transfer Object
+     * @return User user
+     */
+    @Override
+    public User create(UserDTO user) {
+        //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+<span class="fc" id="L40">        User userResult = UserMapper.INSTANCE.toUser(user);</span>
+<span class="fc" id="L41">        userResult.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+<span class="fc" id="L42">        return userRepository.save(userResult);</span>
+    }
+
+    /**
+     * &lt;b&gt;Spring Security Method to log-in&lt;/b&gt;
+     * @param name name is used to log in
+     * @return UserDetails
+     * @throws UsernameNotFoundException spring security exception
+     */
+    @Override
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+<span class="fc" id="L53">        Optional&lt;User&gt; user = userRepository.findByUsername(name);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (user.isEmpty()) {</span>
+<span class="fc" id="L55">            throw new UsernameNotFoundException(&quot;Invalid username or password.&quot;);</span>
+        }
+<span class="fc" id="L57">        return new org.springframework.security.core.userdetails.User(</span>
+<span class="fc" id="L58">                user.get().getUsername(),</span>
+<span class="fc" id="L59">                user.get().getPassword(),</span>
+<span class="fc" id="L60">                List.of(new SimpleGrantedAuthority(&quot;USER&quot;)));</span>
+    }
+
+
+     @Override
+     public Collection&lt;UserDTO&gt; findAll() {
+<span class="fc" id="L66">         Collection&lt;UserDTO&gt; userDtoList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L67">         userRepository.findAll().forEach(</span>
+                 user -&gt; {
+<span class="fc" id="L69">                     UserDTO userResult = UserMapper.INSTANCE.fromUser(user);</span>
+<span class="fc" id="L70">                     userDtoList.add(userResult);</span>
+<span class="fc" id="L71">                 }</span>
+         );
+<span class="fc" id="L73">        return userDtoList;</span>
+     }
+
+     @Override
+     public UserDTO findOne(Integer id) {
+<span class="fc" id="L78">        UserDTO userResult = null;</span>
+<span class="fc" id="L79">        User user = userRepository.findById(id).orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid user Id:&quot; + id));</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (user != null){</span>
+<span class="fc" id="L81">            userResult = UserMapper.INSTANCE.fromUser(user);</span>
+        }
+<span class="fc" id="L83">        return userResult;</span>
+     }
+
+    /**
+     * &lt;b&gt;Get a user without Spring Security&lt;/b&gt;
+     * @param name String
+     * @return User if no user is find, return null
+     */
+     @Override
+     public User findByName(String name) {
+<span class="fc" id="L93">         User result = null;</span>
+<span class="fc" id="L94">         Optional&lt;User&gt; userOptional = userRepository.findByUsername(name);</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">         if (userOptional.isPresent()){</span>
+<span class="fc" id="L96">            result = userOptional.get();</span>
+         }
+<span class="fc" id="L98">         return result;</span>
+     }
+
+     @Override
+     public User update(UserDTO userDto, Integer id) {
+<span class="fc" id="L103">        User user = UserMapper.INSTANCE.toUser(userDto);</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if (id != null) {</span>
+<span class="fc" id="L105">            userRepository.findById(id).orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid user Id:&quot; + user.getId()));</span>
+<span class="fc" id="L106">            user.setId(id);</span>
+        }
+        //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+<span class="fc" id="L109">        String encodedPassword = passwordEncoder.encode(user.getPassword());</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (encodedPassword != null){</span>
+<span class="fc" id="L111">            user.setPassword(encodedPassword);</span>
+        } else {
+<span class="fc" id="L113">           throw new IllegalArgumentException(&quot;Invalid user password&quot;);</span>
+        }
+<span class="fc" id="L115">        return userRepository.save(user);</span>
+     }
+
+     @Override
+     public void delete(Integer id) {
+<span class="fc" id="L120">         User user = userRepository.findById(id).orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid user Id:&quot; + id));</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">         if(user != null){</span>
+<span class="fc" id="L122">             userRepository.delete(user);</span>
+         }
+<span class="fc" id="L124">     }</span>
+
+     @Override
+     public void deleteAll() {
+<span class="fc" id="L128">        userRepository.deleteAll();</span>
+<span class="fc" id="L129">     }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -15,25 +15,34 @@
 
 	<div class="row">
 		<form action="#" th:action="@{/user/validate}" th:object="${user}" method="post" class="form-horizontal" style="width: 100%">
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+				<ol>
+					<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+				</ol>
+			</div>
+			<!--<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+				<p th:each="err : ${#fields.allErrors()}" th:text="${err}">...</p>
+			</div>-->
 			<div class="form-group">
 				<label for="fullname" class="col-sm-2 control-label">Full Name</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{fullname}" id="fullname" placeholder="Full Name" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></p>
+					<p class="text-danger" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}">FullName Error</p>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="username" class="col-sm-2 control-label">User Name</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{username}" id="username" placeholder="User Name" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+					<p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">UserName Error</p>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="password" class="col-sm-2 control-label">Password</label>
 				<div class="col-sm-10">
 					<input type="password" th:field="*{password}" id="password" placeholder="Password" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+					<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect Password</p>
+					<label><em><small>Password policy: One uppercase | One lowercase | One special character | One digit (no blank space/at least 8 characters).</small></em></label>
 				</div>
 			</div>
 			<div class="form-group">
@@ -41,7 +50,7 @@
 				<div class="col-sm-10">
 					<label class="checkbox-inline"><input type="radio" th:field="*{role}" th:value="ADMIN">Admin</label>
 					<label class="checkbox-inline"><input type="radio" th:field="*{role}" th:value="USER">User</label>
-					<p class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></p>
+					<p class="text-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Role Error</p>
 				</div>
 			</div>
 

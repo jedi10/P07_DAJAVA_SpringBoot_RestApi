@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BidList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-poseidon</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">BidList.java</span></div><h1>BidList.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import com.nnk.springboot.web.dto.validation.DigitalNumber;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Required;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Entity
+@Table(name = &quot;bidlist&quot;)
+<span class="fc" id="L18">@NoArgsConstructor</span>
+@Getter
+<span class="pc" id="L20">@Setter</span>
+public class BidList {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+<span class="fc" id="L25">    private Integer id;</span>
+
+    @NotBlank(message = &quot;{BidList.Account.mandatory}&quot;)
+    @Size(min = 2, max = 255, message = &quot;{BidList.Account.size}&quot;)
+<span class="fc" id="L29">    private String account;</span>
+
+    @NotBlank(message = &quot;{BidList.Type.mandatory}&quot;)
+    @Size(max = 255, message = &quot;{BidList.Type.size}&quot;)
+<span class="fc" id="L33">    private String type;</span>
+
+     //These validation can only filter String entry
+    //@Pattern(regexp = &quot;[1-9][0-9]*|0&quot; , message = &quot;Entry has to be a numerical number !!&quot;)//-?\\d+(\\.\\d+)?
+    //@DigitalNumber(message = &quot;Entry has to be a numerical number !!&quot;)
+    @DecimalMin(value= &quot;0&quot;, inclusive = false, message = &quot;{BidList.BidQuantity.validity}&quot;)
+    @Column(name = &quot;bid_quantity&quot;)
+<span class="fc" id="L40">    private Double bidQuantity;</span>
+
+    @Column(name = &quot;ask_quantity&quot;)
+<span class="fc" id="L43">    private Double askQuantity;</span>
+
+<span class="fc" id="L45">    private Double bid;</span>
+
+<span class="fc" id="L47">    private Double ask;</span>
+
+<span class="fc" id="L49">    private String benchmark;</span>
+
+    @Column(name = &quot;bid_list_date&quot;, columnDefinition = &quot;TIMESTAMP DEFAULT CURRENT_TIMESTAMP&quot;)
+<span class="fc" id="L52">    private LocalDateTime bidListDate;</span>
+
+<span class="fc" id="L54">    private String commentary;</span>
+
+<span class="fc" id="L56">    private String security;</span>
+
+<span class="fc" id="L58">    private String status;</span>
+
+<span class="fc" id="L60">    private String trader;</span>
+
+<span class="fc" id="L62">    private String book;</span>
+
+    @Column(name= &quot;creation_name&quot;)
+<span class="fc" id="L65">    private String creationName;</span>
+
+    @Column(name = &quot;creation_date&quot;, columnDefinition = &quot;TIMESTAMP DEFAULT CURRENT_TIMESTAMP&quot;)
+<span class="fc" id="L68">    private LocalDateTime creationDate;</span>
+
+    @Column(name = &quot;revision_name&quot;)
+<span class="fc" id="L71">    private String revisionName;</span>
+
+    @Column(name = &quot;revision_date&quot;, columnDefinition = &quot;TIMESTAMP DEFAULT CURRENT_TIMESTAMP&quot;)
+<span class="fc" id="L74">    private LocalDateTime revisionDate;</span>
+
+    @Column(name = &quot;deal_name&quot;)
+<span class="fc" id="L77">    private String dealName;</span>
+
+    @Column(name = &quot;deal_type&quot;)
+<span class="fc" id="L80">    private String dealType;</span>
+
+    @Column(name = &quot;source_list_id&quot;)
+<span class="fc" id="L83">    private String sourceListId;</span>
+
+<span class="fc" id="L85">    private String side;</span>
+
+    /**
+     * &lt;b&gt;Constructor BidList&lt;/b&gt;
+     * @param account bid account name
+     * @param type bid type
+     * @param bidQuantity bid quantity
+     */
+<span class="fc" id="L93">    public BidList(String account, String type, Double bidQuantity) {</span>
+<span class="fc" id="L94">        this.account = account;</span>
+<span class="fc" id="L95">        this.type = type;</span>
+<span class="fc" id="L96">        this.bidQuantity = bidQuantity;</span>
+<span class="fc" id="L97">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        if (!(o instanceof BidList)) return false;</span>
+<span class="fc" id="L103">        BidList bidList = (BidList) o;</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        return Objects.equals(account, bidList.account) &amp;&amp;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                Objects.equals(type, bidList.type) &amp;&amp;</span>
+<span class="pc bnc" id="L106" title="All 2 branches missed.">                Objects.equals(bidQuantity, bidList.bidQuantity);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L111">        return Objects.hash(account, type, bidQuantity);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L116">        return &quot;BidList{&quot; +</span>
+                &quot;account='&quot; + account + '\'' +
+                &quot;, type='&quot; + type + '\'' +
+                &quot;, bidQuantity=&quot; + bidQuantity +
+                '}';
+    }
+}
+
+
+//Custom validator https://mkyong.com/spring-boot/spring-rest-validation-example/
+// custom error message structure https://codedelay.com/spring-validator-spring-boot-validation-example/
+//check number https://www.baeldung.com/java-check-string-number
+//https://asbnotebook.com/2020/04/11/spring-boot-thymeleaf-form-validation-example/
+//https://stackoverflow.com/questions/15488990/validating-double-and-float-values-using-hibernate-validator-bean-validation
+//validating nested object https://nullbeans.com/how-to-use-java-bean-validation-in-spring-boot/
+//custom error response https://www.springboottutorial.com/spring-boot-validation-for-rest-services
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

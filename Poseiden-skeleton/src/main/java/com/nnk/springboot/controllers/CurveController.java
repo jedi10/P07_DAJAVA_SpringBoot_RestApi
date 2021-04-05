@@ -1,54 +1,155 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.repositories.CurvePointRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Api(tags = {"Curve Controller"})
+@Tag(name = "Curve Controller", description = "Private Resources")
+@Slf4j
 @Controller
+@RequestMapping("/curvePoint/")
 public class CurveController {
-    // TODO: Inject Curve Point service
 
-    @RequestMapping("/curvePoint/list")
-    public String home(Model model)
+    private CurvePointRepository curvePointRepository;
+
+    private String dataName = "CurvePoint";
+
+    public CurveController(CurvePointRepository curvePointRepository) {
+        this.curvePointRepository = curvePointRepository;
+    }
+
+    @ApiOperation(value = "Get List of Curve")
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    public String home(Model model, HttpServletRequest request, HttpServletResponse response)
     {
-        // TODO: find all Curve Point, add to model
+        log.info("Get {} List on URI: '{}' : RESPONSE STATUS: '{}'",
+                dataName,
+                request.getRequestURI(),
+                response.getStatus());
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
         return "curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/add")
-    public String addBidForm(CurvePoint bid) {
+    @ApiOperation(value = "Go to Creation Curve Form")
+    @GetMapping(value = "add")
+    public String addCurveForm(CurvePoint curve, Model model,
+                               HttpServletRequest request, HttpServletResponse response) {
+        log.info("Go to {} Creation Form on URI: '{}' : RESPONSE STATUS: '{}'",
+                dataName,
+                request.getRequestURI(),
+                response.getStatus());
+        model.addAttribute("curvePoint", new CurvePoint());
         return "curvePoint/add";
     }
 
-    @PostMapping("/curvePoint/validate")
-    public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Curve list
-        return "curvePoint/add";
+    @ApiOperation(value = "Curve Creation Validation")
+    @PostMapping(value = "validate")
+    public String validate(@Valid @ModelAttribute("curvePoint") CurvePoint curvePoint,
+                           BindingResult result,
+                           Model model,
+                           HttpServletRequest request, HttpServletResponse response) {
+        if (result.hasErrors()){
+            log.warn("{} Creation Error on URI: '{}': Error Field(s): '{}' : RESPONSE STATUS: '{}'",
+                    dataName,
+                    request.getRequestURI(),
+                    result.getFieldErrors().stream()
+                            .map(e-> e.getField().toUpperCase())
+                            .distinct()
+                            .collect(Collectors.joining(", ")),
+                    response.getStatus());
+            return "curvePoint/add";
+        }
+        CurvePoint curveCreated =  curvePointRepository.save(curvePoint);
+        log.info("{} Creation on URI: '{}' : {} Created '{}' : RESPONSE STATUS: '{}'",
+                dataName,
+                request.getRequestURI(),
+                dataName,
+                curveCreated.getId() + " " + curveCreated.getTerm(),
+                response.getStatus());
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
+        return "curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get CurvePoint by Id and to model then show to the form
+    @ApiOperation(value = "Go to Update Curve Form")
+    @GetMapping(value = "update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id,
+                                 Model model,
+                                 HttpServletRequest request, HttpServletResponse response) {
+        String errorMessage = "Invalid curve Id: there is no curve with Id: ";
+        CurvePoint curvePoint = curvePointRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException(errorMessage + id));
+        log.info("Go to {} Update Form on URI: '{}': RESPONSE STATUS: '{}'",
+                dataName,
+                request.getRequestURI(),
+                response.getStatus());
+        model.addAttribute("curvePoint", curvePoint);
         return "curvePoint/update";
     }
 
-    @PostMapping("/curvePoint/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Curve and return Curve list
-        return "redirect:/curvePoint/list";
+    @ApiOperation(value = "Curve Update Validation")
+    @PostMapping(value = "update/{id}")
+    public String updateCurve(@PathVariable("id") Integer id,
+                            @Valid @ModelAttribute("curvePoint") CurvePoint curvePoint,
+                            BindingResult result, Model model,
+                            HttpServletRequest request, HttpServletResponse response) {
+        if(result.hasErrors()){
+            log.warn("{} Update Error on URI: '{}': Error Field(s):'{}' : RESPONSE STATUS: '{}'",
+                    dataName,
+                    request.getRequestURI(),
+                    result.getFieldErrors().stream()
+                            .map(e-> e.getField().toUpperCase())
+                            .distinct()
+                            .collect(Collectors.joining(", ")),
+                    response.getStatus());
+            return "curvePoint/update";
+        }
+        curvePoint.setId(id);
+        CurvePoint curveUpdated = curvePointRepository.save(curvePoint);
+        log.info("{} Update on URI: '{}' : {} Updated '{}' : RESPONSE STATUS: '{}'",
+                dataName,
+                request.getRequestURI(),
+                dataName,
+                curveUpdated.getId() + " " + curveUpdated.getTerm(),
+                response.getStatus());
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
+        return "curvePoint/list";
     }
 
-    @GetMapping("/curvePoint/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Curve by Id and delete the Curve, return to Curve list
-        return "redirect:/curvePoint/list";
+    @ApiOperation(value = "Delete Curve")
+    @RolesAllowed("ADMIN")
+    @GetMapping(value = "delete/{id}")
+    public String deleteCurve(@PathVariable("id") Integer id,
+                            Model model,
+                            HttpServletRequest request, HttpServletResponse response) {
+        Optional<CurvePoint> curvePoint = curvePointRepository.findById(id);
+        if(curvePoint.isPresent()){
+            curvePointRepository.deleteById(id);
+            log.info("Delete {} on URI: '{}' : RESPONSE STATUS: '{}'",
+                    dataName,
+                    request.getRequestURI(),
+                    response.getStatus());
+        } else {
+            log.warn("No {} was deleted on URI: '{}' : RESPONSE STATUS: '{}'",
+                    dataName,
+                    request.getRequestURI(),
+                    response.getStatus());
+        }
+        model.addAttribute("curvePoints", curvePointRepository.findAll());
+        return "curvePoint/list";
     }
 }

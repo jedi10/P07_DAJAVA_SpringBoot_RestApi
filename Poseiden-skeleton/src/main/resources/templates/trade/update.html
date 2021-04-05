@@ -13,10 +13,48 @@
 	</div>
 
 	<div class="row">
-		<form action="#" th:action="@{/trade/update/{id}(id=${trade.tradeId})}" th:object="${trade}" method="post" class="form-horizontal" style="width: 100%">
-			<!--
-			TODO: Create a form to edit the values of Trade, there are 2 buttons: Update data and Cancel to the Trade List
-			 -->
+		<form action="#" th:action="@{/trade/update/{id}(id=${trade.id})}" th:object="${trade}" method="post" class="form-horizontal" style="width: 100%">
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+				<ol>
+					<li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+				</ol>
+			</div>
+			<div class = "form-group row ">
+				<label for = "account" class = "col-sm-2 col-form-label">Account</label>
+				<div class = "col-sm-4">
+					<input th:field="*{account}" id = "account" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}"></p>
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "type" class = "col-sm-2 col-form-label">Type</label>
+				<div class = "col-sm-4">
+					<input th:field="*{type}" id = "type" type = "text" class = "form-control" placeholder = "Mandatory">
+					<p class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
+				</div>
+			</div>
+			<div class = "form-group row ">
+				<label for = "buyquantity" class = "col-sm-2 col-form-label">Buy Quantity</label>
+				<div class = "col-sm-4">
+					<input th:field="*{buyQuantity}" id = "buyquantity" type = "number" step="1" list="defaultNumbers" class = "form-control" placeholder = "Mandatory" required>
+					<datalist id="defaultNumbers">
+						<option value="1">
+						<option value="10">
+						<option value="100">
+						<option value="1000">
+						<option value="10000">
+					</datalist>
+					<p class="text-danger" th:if="${#fields.hasErrors('buyQuantity')}" th:errors="*{buyQuantity}"></p>
+				</div>
+			</div>
+			<div class = "form-group row">
+				<div class = "col-sm-5">
+					<button type = "submit" class = "btn btn-primary">Update data</button>
+				</div>
+				<div class = "col-sm-5">
+					<a class="btn btn-danger" href="/trade/list">Cancel</a>
+				</div>
+			</div>
 		</form>
 	</div>
 

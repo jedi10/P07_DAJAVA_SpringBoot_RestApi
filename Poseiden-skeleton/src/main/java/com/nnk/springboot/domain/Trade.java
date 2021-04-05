@@ -5,112 +5,81 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Entity
 @Table(name = "trade")
 @NoArgsConstructor
+@Getter
+@Setter
 public class Trade {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Getter
-    @Setter
     private Integer id;
 
-    @Getter
-    @Setter
+    @NotBlank(message = "{Trade.Account.mandatory}")
+    @Size(min = 1, max = 255, message = "{Trade.Account.size}")
     private String account;
 
-    @Getter
-    @Setter
+    @NotBlank(message = "{Trade.Type.mandatory}")
+    @Size(min = 1, max = 255, message = "{Trade.Type.size}")
     private String type;
 
+    @DecimalMin(value= "0", inclusive = false, message = "{Trade.BuyQuantity.validity}")
     @Column(name = "buy_quantity")
-    @Getter
-    @Setter
     private Double buyQuantity;
 
     @Column(name = "sell_quantity")
-    @Getter
-    @Setter
     private Double sellQuantity;
 
     @Column(name = "buy_price")
-    @Getter
-    @Setter
     private Double buyPrice;
 
     @Column(name = "sell_price")
-    @Getter
-    @Setter
     private Double sellPrice;
 
-    @Getter
-    @Setter
     private String benchmark;
 
     @Column(name = "trade_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime tradeDate;
 
-    @Getter
-    @Setter
     private String security;
 
-    @Getter
-    @Setter
     private String status;
 
-    @Getter
-    @Setter
     private String trader;
 
-    @Getter
-    @Setter
     private String book;
 
     @Column(name= "creation_name")
-    @Getter
-    @Setter
     private String creationName;
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime creationDate;
 
     @Column(name = "revision_name")
-    @Getter
-    @Setter
     private String revisionName;
 
     @Column(name = "revision_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    @Getter
-    @Setter
     private LocalDateTime revisionDate;
 
     @Column(name = "deal_name")
-    @Getter
-    @Setter
     private String dealName;
 
     @Column(name = "deal_type")
-    @Getter
-    @Setter
     private String dealType;
 
     @Column(name = "source_list_id")
-    @Getter
-    @Setter
     private String sourceListId;
 
-    @Getter
-    @Setter
     private String side;
 
     /**
@@ -121,5 +90,27 @@ public class Trade {
     public Trade(String account, String type) {
         this.account = account;
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Trade)) return false;
+        Trade trade = (Trade) o;
+        return Objects.equals(account, trade.account) &&
+                Objects.equals(type, trade.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(account, type);
+    }
+
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "account='" + account + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }
