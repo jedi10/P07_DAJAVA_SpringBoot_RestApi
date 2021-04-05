@@ -2,6 +2,9 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,8 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Api(tags = {"Rating Controller"})
+@Tag(name = "Rating Controller", description = "Private Resources")
 @Slf4j
 @Controller
 @RequestMapping("/rating/")
@@ -28,6 +33,7 @@ public class RatingController {
         this.ratingRepository = ratingRepository;
     }
 
+    @ApiOperation(value = "Get List of Rating")
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model, HttpServletRequest request, HttpServletResponse response)
     {
@@ -39,6 +45,7 @@ public class RatingController {
         return "rating/list";
     }
 
+    @ApiOperation(value = "Go to Creation Rating Form")
     @GetMapping(value = "add")
     public String addRatingForm(Rating rating, Model model,
                                 HttpServletRequest request, HttpServletResponse response)
@@ -51,6 +58,7 @@ public class RatingController {
         return "rating/add";
     }
 
+    @ApiOperation(value = "Rating Creation Validation")
     @PostMapping(value = "validate")
     public String validate(@Valid @ModelAttribute("rating") Rating rating,
                            BindingResult result,
@@ -78,6 +86,7 @@ public class RatingController {
         return "rating/list";
     }
 
+    @ApiOperation(value = "Go to Update Rating Form")
     @GetMapping(value= "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id,
                                  Model model,
@@ -93,6 +102,7 @@ public class RatingController {
         return "rating/update";
     }
 
+    @ApiOperation(value = "Rating Update Validation")
     @PostMapping(value = "update/{id}")
     public String updateRating(@PathVariable("id") Integer id,
                                @Valid @ModelAttribute("rating") Rating rating,
@@ -122,6 +132,7 @@ public class RatingController {
         return "rating/list";
     }
 
+    @ApiOperation(value = "Delete Rating")
     @RolesAllowed("ADMIN")
     @GetMapping(value ="delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model,

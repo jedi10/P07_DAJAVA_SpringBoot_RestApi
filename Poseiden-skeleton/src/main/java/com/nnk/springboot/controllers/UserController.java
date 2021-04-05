@@ -3,6 +3,9 @@ package com.nnk.springboot.controllers;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.IUserDalService;
 import com.nnk.springboot.web.dto.UserDTO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,8 @@ import java.util.Collection;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+@Api(tags = {"User Controller"})
+@Tag(name = "User Controller", description = "Public and Private Resources")
 @Slf4j
 @Controller
 @RequestMapping("/user/")
@@ -28,6 +33,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ApiOperation(value = "Public: Get List of User")
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model, HttpServletRequest request, HttpServletResponse response)
     {
@@ -39,6 +45,7 @@ public class UserController {
         return "user/list";
     }
 
+    @ApiOperation(value = "Public: Go to Creation User Form")
     @GetMapping(value = "add")
     public String addUser(UserDTO user, Model model,
                           HttpServletRequest request, HttpServletResponse response) {
@@ -49,6 +56,7 @@ public class UserController {
         return "user/add";
     }
 
+    @ApiOperation(value = "Public: Validate User Creation")
     @PostMapping(value = "validate")
     public String validate(@Valid @ModelAttribute("user") UserDTO user,
                            BindingResult result,
@@ -73,6 +81,7 @@ public class UserController {
         return "user/list";
     }
 
+    @ApiOperation(value = "Private: Go to Update User Form")
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model,
                                  HttpServletRequest request, HttpServletResponse response) {
@@ -86,6 +95,7 @@ public class UserController {
         return "user/update";
     }
 
+    @ApiOperation(value = "Private: Validate User Update")
     @PostMapping(value = "update/{id}")
     public String updateUser(@PathVariable("id") Integer id,
                              @Valid @ModelAttribute("user") UserDTO user,
@@ -111,6 +121,7 @@ public class UserController {
         return "user/list";
     }
 
+    @ApiOperation(value = "Private: Delete User")
     @RolesAllowed("ADMIN")
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "delete/{id}")
@@ -135,4 +146,6 @@ public class UserController {
 
 //Logging https://stackoverflow.com/questions/37710557/how-to-get-request-url-in-spring-boot-restcontroller
 
-//List to string with join comma (lamda), https://dzone.com/articles/java-8-convert-list-to-string-comma-separated
+//List to string with join comma (lambda), https://dzone.com/articles/java-8-convert-list-to-string-comma-separated
+
+//Swagger example https://www.programcreek.com/java-api-examples/euclidean_gcd/?api=io.swagger.annotations.ApiOperation

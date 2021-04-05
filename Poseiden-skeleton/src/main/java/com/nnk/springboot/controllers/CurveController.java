@@ -2,6 +2,9 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,8 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Api(tags = {"Curve Controller"})
+@Tag(name = "Curve Controller", description = "Private Resources")
 @Slf4j
 @Controller
 @RequestMapping("/curvePoint/")
@@ -28,6 +33,7 @@ public class CurveController {
         this.curvePointRepository = curvePointRepository;
     }
 
+    @ApiOperation(value = "Get List of Curve")
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model, HttpServletRequest request, HttpServletResponse response)
     {
@@ -39,6 +45,7 @@ public class CurveController {
         return "curvePoint/list";
     }
 
+    @ApiOperation(value = "Go to Creation Curve Form")
     @GetMapping(value = "add")
     public String addCurveForm(CurvePoint curve, Model model,
                                HttpServletRequest request, HttpServletResponse response) {
@@ -50,6 +57,7 @@ public class CurveController {
         return "curvePoint/add";
     }
 
+    @ApiOperation(value = "Curve Creation Validation")
     @PostMapping(value = "validate")
     public String validate(@Valid @ModelAttribute("curvePoint") CurvePoint curvePoint,
                            BindingResult result,
@@ -77,6 +85,7 @@ public class CurveController {
         return "curvePoint/list";
     }
 
+    @ApiOperation(value = "Go to Update Curve Form")
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id,
                                  Model model,
@@ -92,6 +101,7 @@ public class CurveController {
         return "curvePoint/update";
     }
 
+    @ApiOperation(value = "Curve Update Validation")
     @PostMapping(value = "update/{id}")
     public String updateCurve(@PathVariable("id") Integer id,
                             @Valid @ModelAttribute("curvePoint") CurvePoint curvePoint,
@@ -120,6 +130,7 @@ public class CurveController {
         return "curvePoint/list";
     }
 
+    @ApiOperation(value = "Delete Curve")
     @RolesAllowed("ADMIN")
     @GetMapping(value = "delete/{id}")
     public String deleteCurve(@PathVariable("id") Integer id,

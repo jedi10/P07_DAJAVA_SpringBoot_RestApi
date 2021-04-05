@@ -2,6 +2,9 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,8 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Api(tags = {"RuleName Controller"})
+@Tag(name = "RuleName Controller", description = "Private Resources")
 @Slf4j
 @Controller
 @RequestMapping("/ruleName/")
@@ -28,6 +33,7 @@ public class RuleNameController {
         this.ruleNameRepository = ruleNameRepository;
     }
 
+    @ApiOperation(value = "Get List of RuleName")
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String home(Model model, HttpServletRequest request, HttpServletResponse response)
     {
@@ -39,6 +45,7 @@ public class RuleNameController {
         return "ruleName/list";
     }
 
+    @ApiOperation(value = "Go to Creation RuleName Form")
     @GetMapping(value = "add")
     public String addRuleForm(RuleName ruleName, Model model,
                               HttpServletRequest request, HttpServletResponse response) {
@@ -50,6 +57,7 @@ public class RuleNameController {
         return "ruleName/add";
     }
 
+    @ApiOperation(value = "RuleName Creation Validation")
     @PostMapping(value = "validate")
     public String validate(@Valid @ModelAttribute("ruleName") RuleName ruleName,
                            BindingResult result,
@@ -77,6 +85,7 @@ public class RuleNameController {
         return "ruleName/list";
     }
 
+    @ApiOperation(value = "Go to Update RuleName Form")
     @GetMapping(value = "update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id,
                                  Model model,
@@ -92,6 +101,7 @@ public class RuleNameController {
         return "ruleName/update";
     }
 
+    @ApiOperation(value = "RuleName Update Validation")
     @PostMapping(value = "update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id,
                                  @Valid @ModelAttribute("ruleName") RuleName ruleName,
@@ -121,6 +131,7 @@ public class RuleNameController {
         return "ruleName/list";
     }
 
+    @ApiOperation(value = "Delete RuleName")
     @RolesAllowed("ADMIN")
     @GetMapping(value = "delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id,
